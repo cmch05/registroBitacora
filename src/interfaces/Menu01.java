@@ -13,16 +13,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import mundo.ConectarDB;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JMenuItem;
+import org.apache.commons.codec.digest.DigestUtils;// modulo common
 
 /**
  *
@@ -36,7 +32,7 @@ public class Menu01 extends javax.swing.JFrame {
     String stringSeleccion,sSQL;
 
     public Menu01(int perfil) {
-        setResizable(false);
+        this.setResizable(false);
         this.perfil = perfil;
         initComponents();
 
@@ -149,16 +145,34 @@ public class Menu01 extends javax.swing.JFrame {
         
         m.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-        
-        
-                for(int i =0;i<nombreMenuItem.size();i++){
-                    if(nombreMenuItem.get(i).toString().equals("ver usuario")){
-                        txtContraseña.setEnabled(true);
+                
+                if(m.getText().equals("ver usuario")){
+                    txtContraseña.setEnabled(false);
+                        txtFecha.setEnabled(false);
+                        txtNivel.setEnabled(false);
+                        txtNombre.setEnabled(true);
+                        btnCrear.setEnabled(false);
+                }
+                else if(m.getText().equals("crear usuario")){
+                    txtContraseña.setEnabled(true);
                         txtFecha.setEnabled(true);
                         txtNivel.setEnabled(true);
                         txtNombre.setEnabled(true);
                         btnCrear.setEnabled(true);
-                        break;
+                }
+                else if(m.getText().equals("actualizar usuario")){
+                    txtContraseña.setEnabled(true);
+                        txtFecha.setEnabled(true);
+                        txtNivel.setEnabled(true);
+                        txtNombre.setEnabled(true);
+                        btnCrear.setEnabled(true);
+                }
+        
+        
+                for(int i =0;i<nombreMenuItem.size();i++){
+                    if(nombreMenuItem.get(i).toString().equals("ver usuario")){
+                        
+                       
                     }
 
                 }
@@ -262,7 +276,9 @@ public class Menu01 extends javax.swing.JFrame {
         ConectarDB conectar = new ConectarDB();
         Connection con = conectar.coneccion();
         String fechaLimite = txtFecha.getText();
-        String pass="md5('"+txtContraseña.getText()+"')";
+        
+        String pass=txtContraseña.getText();
+        String passEncriptado= DigestUtils.md5Hex(pass);
         int estado=0;
          sSQL = "select curdate() <= '"+fechaLimite+"'";
         
@@ -288,7 +304,7 @@ public class Menu01 extends javax.swing.JFrame {
             //ResultSet rs = pst.executeQuery(sSQL);
             
             pst.setString(1, txtNombre.getText());
-            pst.setString(2, pass);
+            pst.setString(2, passEncriptado);
             pst.setInt(3, estado);
             pst.setString(4, fechaLimite);
             pst.setString(5, txtNivel.getText());
@@ -332,14 +348,14 @@ public class Menu01 extends javax.swing.JFrame {
             
         }
         
-        sSQL = "update usuario set login=?, password=?, estado=?, fecha=?, nivel=?"
-                + " where login = 'usuario7' " ;
+        sSQL = "update usuario set login=?,password=?, estado=?, fecha=?, nivel=?"
+                + " where login = 'usuario4' " ;
         try {
             PreparedStatement pst = con.prepareStatement(sSQL);
             //ResultSet rs = pst.executeQuery(sSQL);
             
             pst.setString(1, txtNombre.getText());
-            pst.setString(2, "md5('"+txtContraseña.getText()+"')");
+            pst.setString(2, DigestUtils.md5Hex(txtContraseña.getText()));
             pst.setInt(3, estado);
             pst.setString(4, fechaLimite);
             pst.setString(5, txtNivel.getText());
@@ -347,6 +363,7 @@ public class Menu01 extends javax.swing.JFrame {
               pst.executeUpdate();
             //pst.ex
             //pst.executeUpdate(sSQL);
+            JOptionPane.showMessageDialog(null, "Usuario " +txtNombre.getText()+" Actualizado" );
         
         } 
         catch (SQLException ex) {
@@ -354,6 +371,9 @@ public class Menu01 extends javax.swing.JFrame {
             //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
        
+        
+    }
+    public void eliminarUsuario(){
         
     }
 
@@ -419,7 +439,7 @@ public class Menu01 extends javax.swing.JFrame {
                 btnCrearActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCrear, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, -1, -1));
+        getContentPane().add(btnCrear, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 273, -1, 20));
 
         jLabel4.setText("Nivel de Acceso");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, -1, -1));
@@ -585,7 +605,8 @@ public class Menu01 extends javax.swing.JFrame {
         
             // TODO add your handling code here:
             //crearUsuario();
-            actualizarUsuario();
+           // crearUsuario();
+           actualizarUsuario();
         
     }//GEN-LAST:event_btnCrearActionPerformed
 
