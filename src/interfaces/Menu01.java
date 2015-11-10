@@ -14,10 +14,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import mundo.ConectarDB;
 import javax.swing.JMenuItem;
+import javax.swing.JTextField;
 import mundo.MetodosMenu01;
 import org.apache.commons.codec.digest.DigestUtils;// modulo common
 
@@ -29,16 +31,31 @@ public class Menu01 extends javax.swing.JFrame {
     private int perfil;
     private DefaultTableModel modelo;
     private ArrayList serie=new ArrayList();
-    private ArrayList nombreMenuItem=new ArrayList();
+    //private ArrayList nombreMenuItem=new ArrayList();
     private String stringSeleccion,sSQL;
     private String accionCrearActualizar;
+    
+/*
+    public Menu01(String accionCrearActualizar) {
+        this.accionCrearActualizar = accionCrearActualizar;
+    }
+    */
+    public void setAccionCrearActualizar(String accionCrearActualizar) {
+        this.accionCrearActualizar = accionCrearActualizar;
+    }
 
     public Menu01(int perfil) {
         this.setResizable(false);
         this.perfil = perfil;
         initComponents();
 
-        cargarJMenuItem();
+        //cargarJMenuItem();
+        MetodosMenu01 metodo=new MetodosMenu01(perfil, mPermiso);
+        metodo.cargarJMenuItem();
+        
+       // MetodosMenu01 metodo=new MetodosMenu01( txtNombre,  txtFecha,  txtContraseña, 
+       //      txtNivel,  txtBuscar,  btnBuscar,  btnBitacora,  btnCrear); 
+                        
         antesCerrar();
         desHabilitar();
     }
@@ -129,7 +146,7 @@ public class Menu01 extends javax.swing.JFrame {
                 
                 mPermiso.add(rs.getString("permiso")+" usuario");
                    agregarAccionMenu(mPermiso.getItem(i));
-                   nombreMenuItem.add(mPermiso.getItem(i).getText());
+                   //nombreMenuItem.add(mPermiso.getItem(i).getText());
                // cboTablas.addItem(rs.getString("id_perfil"));
                
                //JOptionPane.showMessageDialog(null, mPermiso.getItem(i).getText());

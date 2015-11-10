@@ -1,13 +1,19 @@
 package mundo;
 
+import interfaces.Menu01;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -30,6 +36,29 @@ public class MetodosMenu01 {
     private int perfil;
     private JMenu mPermiso;
     //------------------------------
+    private JTextField txtNombre,txtFecha,txtContraseña,txtNivel,txtBuscar;
+    private JButton btnBuscar,btnBitacora,btnCrear;
+    private String accionCrearActualizar;
+    //---------------------------------
+    //constructor para agregarAccionMenu
+    public MetodosMenu01(JTextField txtNombre, JTextField txtFecha, JTextField txtContraseña, 
+            JTextField txtNivel, JTextField txtBuscar, JButton btnBuscar, JButton btnBitacora, JButton btnCrear) {
+        this.txtNombre = txtNombre;
+        this.txtFecha = txtFecha;
+        this.txtContraseña = txtContraseña;
+        this.txtNivel = txtNivel;
+        this.txtBuscar = txtBuscar;
+        this.btnBuscar = btnBuscar;
+        this.btnBitacora = btnBitacora;
+        this.btnCrear = btnCrear;
+    }
+    
+    //contructor para cargarJMenuItem
+    public MetodosMenu01(int perfil, JMenu mPermiso) {
+        this.perfil = perfil;
+        this.mPermiso = mPermiso;
+    }
+    
     //contructor para verBitacora
     public MetodosMenu01(String parametroBusqueda, DefaultTableModel modelo, JTable tblUsuario, ArrayList serie) {
         this.parametroBusqueda = parametroBusqueda;
@@ -112,6 +141,8 @@ public class MetodosMenu01 {
     }
     
     public void cargarJMenuItem() {
+        Menu01 menu01=new Menu01();
+    
         //un menu un int
          conectar = new ConectarDB();
         String contador = "";
@@ -130,19 +161,65 @@ public class MetodosMenu01 {
                 if(rs.getString("permiso")!=null){
                 
                 mPermiso.add(rs.getString("permiso")+" usuario");
-                   agregarAccionMenu(mPermiso.getItem(i));
-                   nombreMenuItem.add(mPermiso.getItem(i).getText());
-               // cboTablas.addItem(rs.getString("id_perfil"));
+                   menu01.agregarAccionMenu(mPermiso.getItem(i));
+                   //nombreMenuItem.add(mPermiso.getItem(i).getText());
                
-               //JOptionPane.showMessageDialog(null, mPermiso.getItem(i).getText());
                i++;
                 }
             }
-            
-              //JOptionPane.showMessageDialog(null, "exito ");
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "error " + ex);
-            //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
+    public void agregarAccionMenu(JMenuItem m){
+        
+        m.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                
+                if(m.getText().equals("ver usuario")){
+                    txtContraseña.setEnabled(false);
+                        txtFecha.setEnabled(false);
+                        txtNivel.setEnabled(false);
+                        txtNombre.setEnabled(false);
+                        btnCrear.setEnabled(false);
+                        txtBuscar.setEnabled(true);
+                        btnBitacora.setEnabled(true);
+                        btnBuscar.setEnabled(true);
+                }
+                else if(m.getText().equals("crear usuario")){
+                    
+                        txtContraseña.setEnabled(true);
+                        txtFecha.setEnabled(true);
+                        txtNivel.setEnabled(true);
+                        txtNombre.setEnabled(true);
+                        btnCrear.setEnabled(true);
+                        txtBuscar.setEnabled(true);
+                        btnBitacora.setEnabled(true);
+                        btnBuscar.setEnabled(true);
+                        accionCrearActualizar="crear";
+                         Menu01 menu01=new Menu01();
+                        menu01.setAccionCrearActualizar(accionCrearActualizar);
+                    
+                }
+                else if(m.getText().equals("actualizar usuario")){
+                    
+                    
+                        txtContraseña.setEnabled(true);
+                        txtFecha.setEnabled(true);
+                        txtNivel.setEnabled(true);
+                        txtNombre.setEnabled(true);
+                        btnCrear.setEnabled(true);
+                        txtBuscar.setEnabled(true);
+                        btnBitacora.setEnabled(true);
+                        btnBuscar.setEnabled(true);
+                        accionCrearActualizar="actualizar";
+                        Menu01 menu01=new Menu01();
+                        menu01.setAccionCrearActualizar(accionCrearActualizar);
+                }
+            }
+        });
+    }
+    
 }
