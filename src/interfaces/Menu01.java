@@ -26,10 +26,11 @@ import org.apache.commons.codec.digest.DigestUtils;// modulo common
  */
 public class Menu01 extends javax.swing.JFrame {
     private int perfil;
-    DefaultTableModel modelo;
-    ArrayList serie=new ArrayList();
-    ArrayList nombreMenuItem=new ArrayList();
-    String stringSeleccion,sSQL;
+    private DefaultTableModel modelo;
+    private ArrayList serie=new ArrayList();
+    private ArrayList nombreMenuItem=new ArrayList();
+    private String stringSeleccion,sSQL;
+    private String accionCrearActualizar;
 
     public Menu01(int perfil) {
         this.setResizable(false);
@@ -150,31 +151,37 @@ public class Menu01 extends javax.swing.JFrame {
                     txtContraseña.setEnabled(false);
                         txtFecha.setEnabled(false);
                         txtNivel.setEnabled(false);
-                        txtNombre.setEnabled(true);
+                        txtNombre.setEnabled(false);
                         btnCrear.setEnabled(false);
+                        txtBuscar.setEnabled(true);
+                        btnBitacora.setEnabled(true);
+                        btnBuscar.setEnabled(true);
                 }
                 else if(m.getText().equals("crear usuario")){
-                    txtContraseña.setEnabled(true);
+                    
+                        txtContraseña.setEnabled(true);
                         txtFecha.setEnabled(true);
                         txtNivel.setEnabled(true);
                         txtNombre.setEnabled(true);
                         btnCrear.setEnabled(true);
+                        txtBuscar.setEnabled(true);
+                        btnBitacora.setEnabled(true);
+                        btnBuscar.setEnabled(true);
+                        accionCrearActualizar="crear";
+                    
                 }
                 else if(m.getText().equals("actualizar usuario")){
-                    txtContraseña.setEnabled(true);
+                    
+                    
+                        txtContraseña.setEnabled(true);
                         txtFecha.setEnabled(true);
                         txtNivel.setEnabled(true);
                         txtNombre.setEnabled(true);
                         btnCrear.setEnabled(true);
-                }
-        
-        
-                for(int i =0;i<nombreMenuItem.size();i++){
-                    if(nombreMenuItem.get(i).toString().equals("ver usuario")){
-                        
-                       
-                    }
-
+                        txtBuscar.setEnabled(true);
+                        btnBitacora.setEnabled(true);
+                        btnBuscar.setEnabled(true);
+                        accionCrearActualizar="actualizar";
                 }
             }
         });
@@ -192,8 +199,18 @@ public class Menu01 extends javax.swing.JFrame {
         txtNivel.setEnabled(false);
         txtNombre.setEnabled(false);
         btnCrear.setEnabled(false);
+        txtBuscar.setEnabled(false);
+        btnBitacora.setEnabled(false);
+        btnBuscar.setEnabled(false);
         
     }
+    public void habilitarActualizarCrear(){
+        
+    }
+    public void habilitarVerBorrar(){
+    
+    }
+   
     public void borrar(){
         txtBuscar.setText("");
         txtContraseña.setText("");
@@ -604,9 +621,15 @@ public class Menu01 extends javax.swing.JFrame {
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
         
             // TODO add your handling code here:
+            if(accionCrearActualizar.equals("crear")){
+                crearUsuario();
+            }
+            else if(accionCrearActualizar.equals("actualizar")){
+                actualizarUsuario();
+            } 
             //crearUsuario();
-           // crearUsuario();
-           actualizarUsuario();
+           // 
+           
         
     }//GEN-LAST:event_btnCrearActionPerformed
 
