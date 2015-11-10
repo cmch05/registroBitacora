@@ -7,6 +7,9 @@ package interfaces;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
@@ -28,12 +31,18 @@ import org.apache.commons.codec.digest.DigestUtils;// modulo common
  * @author cmch05
  */
 public class Menu01 extends javax.swing.JFrame {
-    private int perfil;
+    private int perfil,nivel;
     private DefaultTableModel modelo;
     private ArrayList serie=new ArrayList();
     //private ArrayList nombreMenuItem=new ArrayList();
     private String stringSeleccion,sSQL;
     private String accionCrearActualizar;
+    private Connection con;
+    private PreparedStatement pst ;
+    private ResultSet rs ;
+    private String itemComboBox;
+    private ArrayList niveles = new ArrayList();
+    
     
 /*
     public Menu01(String accionCrearActualizar) {
@@ -49,17 +58,22 @@ public class Menu01 extends javax.swing.JFrame {
         this.perfil = perfil;
         initComponents();
 
-        //cargarJMenuItem();
-        MetodosMenu01 metodo=new MetodosMenu01(perfil, mPermiso);
-        metodo.cargarJMenuItem();
-        
-       // MetodosMenu01 metodo=new MetodosMenu01( txtNombre,  txtFecha,  txtContraseña, 
-       //      txtNivel,  txtBuscar,  btnBuscar,  btnBitacora,  btnCrear); 
-                        
+        cargarJMenuItem();
+        seleccioNivel();
+        //MetodosMenu01 metodo=new MetodosMenu01();
+        //metodo.cargarJMenuItem();
+        //prueva();
+       
+        agregarAccionBuscar(txtBuscar);                
         antesCerrar();
         desHabilitar();
     }
-
+    /*
+    public void prueva(){
+        MetodosMenu01 metodo=new MetodosMenu01( txtNombre,  txtFecha,  txtContraseña, 
+            txtNivel,  txtBuscar,  btnBuscar,  btnBitacora,  btnCrear); 
+    }
+*/
     public int getPerfil() {
         return perfil;
     }
@@ -72,7 +86,7 @@ public class Menu01 extends javax.swing.JFrame {
     public Menu01() {
         setResizable(false);
         initComponents();
-
+           seleccioNivel();
         //cargarCombo();
         //antesCerrar();
         //cboUsuario.setEnabled(false);
@@ -94,7 +108,7 @@ public class Menu01 extends javax.swing.JFrame {
 
     public void registarSalida() {
         ConectarDB conectar = new ConectarDB();
-        Connection con = conectar.coneccion();
+         con = conectar.coneccion();
         int ser = 0;
         String sSQL = "select serial from bitacora "
                 + "order by serial desc limit 1 ";
@@ -130,7 +144,7 @@ public class Menu01 extends javax.swing.JFrame {
         //JOptionPane.showMessageDialog(null, perfil);
         ConectarDB coneccion = new ConectarDB();
         String contador = "";
-         Connection con = coneccion.coneccion();
+          con = coneccion.coneccion();
         
         sSQL = "select distinct permiso from perfil_permiso left join permiso on "
                 + "perfil_permiso.id_perfil='"+perfil+"'and  perfil_permiso.id_permiso=permiso.id";
@@ -168,24 +182,27 @@ public class Menu01 extends javax.swing.JFrame {
                 if(m.getText().equals("ver usuario")){
                     txtContraseña.setEnabled(false);
                         txtFecha.setEnabled(false);
-                        txtNivel.setEnabled(false);
+                        cboNivel.setEnabled(false);
                         txtNombre.setEnabled(false);
                         btnCrear.setEnabled(false);
                         txtBuscar.setEnabled(true);
                         btnBitacora.setEnabled(true);
                         btnBuscar.setEnabled(true);
+                        
+                        
                 }
                 else if(m.getText().equals("crear usuario")){
                     
                         txtContraseña.setEnabled(true);
                         txtFecha.setEnabled(true);
-                        txtNivel.setEnabled(true);
+                        cboNivel.setEnabled(true);
                         txtNombre.setEnabled(true);
                         btnCrear.setEnabled(true);
                         txtBuscar.setEnabled(true);
                         btnBitacora.setEnabled(true);
                         btnBuscar.setEnabled(true);
                         accionCrearActualizar="crear";
+                        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Crear Usuario"));
                     
                 }
                 else if(m.getText().equals("actualizar usuario")){
@@ -193,18 +210,22 @@ public class Menu01 extends javax.swing.JFrame {
                     
                         txtContraseña.setEnabled(true);
                         txtFecha.setEnabled(true);
-                        txtNivel.setEnabled(true);
+                        cboNivel.setEnabled(true);
                         txtNombre.setEnabled(true);
                         btnCrear.setEnabled(true);
                         txtBuscar.setEnabled(true);
                         btnBitacora.setEnabled(true);
                         btnBuscar.setEnabled(true);
                         accionCrearActualizar="actualizar";
+                        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Actualizar Usuario"));
                 }
             }
         });
     }
    
+      
+    
+    
    
     public void ejecutarAccion(){
         String Mselct =(String) mPermiso.getItem(mPermiso.getWidth()).getText();
@@ -214,7 +235,7 @@ public class Menu01 extends javax.swing.JFrame {
         // txtBuscar.setEnabled(false);
         txtContraseña.setEnabled(false);
         txtFecha.setEnabled(false);
-        txtNivel.setEnabled(false);
+        cboNivel.setEnabled(false);
         txtNombre.setEnabled(false);
         btnCrear.setEnabled(false);
         txtBuscar.setEnabled(false);
@@ -233,7 +254,7 @@ public class Menu01 extends javax.swing.JFrame {
         txtBuscar.setText("");
         txtContraseña.setText("");
         txtFecha.setText("");
-        txtNivel.setText("");
+        
         txtNombre.setText("");
         
         // tblUsuario.setModel(new DefaultTableModel());
@@ -241,8 +262,9 @@ public class Menu01 extends javax.swing.JFrame {
     }
     
     public void crearUsuario() {
+        nivel= (int)niveles.get(cboNivel.getSelectedIndex());
         ConectarDB conectar = new ConectarDB();
-        Connection con = conectar.coneccion();
+         con = conectar.coneccion();
         String fechaLimite = txtFecha.getText();
         
         String pass=txtContraseña.getPassword().toString();
@@ -275,7 +297,7 @@ public class Menu01 extends javax.swing.JFrame {
             pst.setString(2, passEncriptado);
             pst.setInt(3, estado);
             pst.setString(4, fechaLimite);
-            pst.setString(5, txtNivel.getText());
+            pst.setInt(5, nivel);
             //pst.
             //pst.executeUpdate(sSQL);
             pst.executeUpdate();
@@ -294,11 +316,11 @@ public class Menu01 extends javax.swing.JFrame {
         int editado= tblUsuario.getEditingRow();
         //String strs= tblUsuario.is
         ConectarDB conectar = new ConectarDB();
-        Connection con = conectar.coneccion();
+         con = conectar.coneccion();
         String fechaLimite = txtFecha.getText();
         int estado=0;
         String sSQL = "";
-        
+        nivel= (int)niveles.get(cboNivel.getSelectedIndex());
         sSQL = "select curdate() <= '"+fechaLimite+"'";
         
         try {
@@ -307,17 +329,12 @@ public class Menu01 extends javax.swing.JFrame {
             while (rs.next()) {
                 estado= rs.getInt(1);
             }
-            //JOptionPane.showMessageDialog(null, estado);
-
         }
         catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "introduzca la fecha con formato yyyy,mmm,dd ");
-            //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            
         }
-        
         sSQL = "update usuario set login=?,password=?, estado=?, fecha=?, nivel=?"
-                + " where login = 'usuario4' " ;
+                + " where login = 'usuario8' " ;
         try {
             PreparedStatement pst = con.prepareStatement(sSQL);
             //ResultSet rs = pst.executeQuery(sSQL);
@@ -326,7 +343,7 @@ public class Menu01 extends javax.swing.JFrame {
             pst.setString(2, DigestUtils.md5Hex(txtContraseña.getText()));
             pst.setInt(3, estado);
             pst.setString(4, fechaLimite);
-            pst.setString(5, txtNivel.getText());
+            pst.setInt(5, nivel);
             
               pst.executeUpdate();
             //pst.ex
@@ -343,6 +360,54 @@ public class Menu01 extends javax.swing.JFrame {
     }
     public void eliminarUsuario(){
         
+    }
+    public void seleccioNivel(){
+        //JOptionPane.showMessageDialog(null, perfil);
+        ConectarDB coneccion = new ConectarDB();
+        
+        con = coneccion.coneccion();
+        
+        sSQL = "select * from perfil order by 1 desc";
+        
+        
+        //select permiso from perfil_permiso left join permiso on perfil_permiso.id_perfil='2'and  perfil_permiso.id_permiso=permiso.id;
+        try {
+             pst = con.prepareStatement(sSQL);
+             rs = pst.executeQuery(sSQL);
+           
+            while (rs.next()) {
+                
+                
+                cboNivel.addItem(rs.getString("descripcion"));
+                niveles.add(rs.getInt("id"));
+                //JOptionPane.showMessageDialog(null, niveles.get(0));
+                
+            }
+           // pst.execute();
+            
+              //JOptionPane.showMessageDialog(null, "exito ");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "error " + ex);
+            //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    public void agregarAccionBuscar(JTextField m){
+        m.addKeyListener(new KeyAdapter(){
+            @Override
+            public void keyTyped(KeyEvent e){
+                char c=e.getKeyChar();
+                 MetodosMenu01  metodo =new MetodosMenu01(txtBuscar.getText(),modelo,tblUsuario);
+                    metodo.buscar();
+                     if(c==KeyEvent.VK_BACK_SPACE){
+                   
+                   
+                   //tblUsuario.setModel(new DefaultTableModel());
+                    metodo.buscar();
+                }
+                
+            }
+        });
     }
 
     /**
@@ -363,17 +428,17 @@ public class Menu01 extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         btnCrear = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        txtNivel = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblUsuario = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cboNivel = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         txtBuscar = new javax.swing.JTextField();
         btnBuscar = new javax.swing.JButton();
         btnBitacora = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         btnBorrar = new javax.swing.JButton();
+        cboBuscar = new javax.swing.JComboBox<>();
         jMenuBar1 = new javax.swing.JMenuBar();
         mPermiso = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
@@ -412,7 +477,6 @@ public class Menu01 extends javax.swing.JFrame {
 
         jLabel4.setText("Nivel de Acceso");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, -1, -1));
-        getContentPane().add(txtNivel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, 37, -1));
 
         tblUsuario.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -432,23 +496,20 @@ public class Menu01 extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Creción"));
         jPanel1.setToolTipText("");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Invitado", "Editor", "Administrador" }));
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(85, Short.MAX_VALUE)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(cboNivel, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 65, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(212, Short.MAX_VALUE)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(55, 55, 55))
+                .addContainerGap(216, Short.MAX_VALUE)
+                .addComponent(cboNivel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(51, 51, 51))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 190, 310));
@@ -479,25 +540,29 @@ public class Menu01 extends javax.swing.JFrame {
             }
         });
 
+        cboBuscar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Buscar Usuario", "Buscar Bitacora" }));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap(48, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel5)
-                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscar, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnBitacora, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnBorrar, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(btnBorrar, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cboBuscar, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(6, 6, 6)
+                .addComponent(cboBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
                 .addGap(6, 6, 6)
                 .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -505,7 +570,7 @@ public class Menu01 extends javax.swing.JFrame {
                 .addComponent(btnBuscar)
                 .addGap(18, 18, 18)
                 .addComponent(btnBitacora)
-                .addGap(117, 117, 117)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
                 .addComponent(btnBorrar)
                 .addGap(31, 31, 31))
         );
@@ -566,6 +631,8 @@ public class Menu01 extends javax.swing.JFrame {
         //ejecutarAccion();
     }//GEN-LAST:event_btnBorrarActionPerformed
 
+    
+    
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
         MetodosMenu01  metodo =new MetodosMenu01(txtBuscar.getText(),modelo,tblUsuario);
@@ -647,7 +714,8 @@ public class Menu01 extends javax.swing.JFrame {
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCrear;
     private javax.swing.JButton btnSalida;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cboBuscar;
+    private javax.swing.JComboBox<String> cboNivel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -664,7 +732,6 @@ public class Menu01 extends javax.swing.JFrame {
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JPasswordField txtContraseña;
     private javax.swing.JTextField txtFecha;
-    private javax.swing.JTextField txtNivel;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

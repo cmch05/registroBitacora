@@ -3,6 +3,8 @@ package mundo;
 import interfaces.Menu01;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +23,8 @@ import javax.swing.table.DefaultTableModel;
  * @author cmch05
  */
 public class MetodosMenu01 {
+    public MetodosMenu01(){
+}
         private ConectarDB conectar ;
         private Connection con ;
         private PreparedStatement pst;
@@ -140,6 +144,11 @@ public class MetodosMenu01 {
         }
     }
     
+    
+    
+    
+    
+    /*
     public void cargarJMenuItem() {
         Menu01 menu01=new Menu01();
     
@@ -161,7 +170,7 @@ public class MetodosMenu01 {
                 if(rs.getString("permiso")!=null){
                 
                 mPermiso.add(rs.getString("permiso")+" usuario");
-                   menu01.agregarAccionMenu(mPermiso.getItem(i));
+                   agregarAccionMenu(mPermiso.getItem(i));
                    //nombreMenuItem.add(mPermiso.getItem(i).getText());
                
                i++;
@@ -179,25 +188,13 @@ public class MetodosMenu01 {
             public void actionPerformed(ActionEvent evt) {
                 
                 if(m.getText().equals("ver usuario")){
-                    txtContraseña.setEnabled(false);
-                        txtFecha.setEnabled(false);
-                        txtNivel.setEnabled(false);
-                        txtNombre.setEnabled(false);
-                        btnCrear.setEnabled(false);
-                        txtBuscar.setEnabled(true);
-                        btnBitacora.setEnabled(true);
-                        btnBuscar.setEnabled(true);
+                    
+                    accionVerEliminar();
+                        
                 }
                 else if(m.getText().equals("crear usuario")){
                     
-                        txtContraseña.setEnabled(true);
-                        txtFecha.setEnabled(true);
-                        txtNivel.setEnabled(true);
-                        txtNombre.setEnabled(true);
-                        btnCrear.setEnabled(true);
-                        txtBuscar.setEnabled(true);
-                        btnBitacora.setEnabled(true);
-                        btnBuscar.setEnabled(true);
+                        accionCrearActualizar();
                         accionCrearActualizar="crear";
                          Menu01 menu01=new Menu01();
                         menu01.setAccionCrearActualizar(accionCrearActualizar);
@@ -206,6 +203,15 @@ public class MetodosMenu01 {
                 else if(m.getText().equals("actualizar usuario")){
                     
                     
+                        accionCrearActualizar();
+                        accionCrearActualizar="actualizar";
+                        Menu01 menu01=new Menu01();
+                        menu01.setAccionCrearActualizar(accionCrearActualizar);
+                }
+            }
+        });
+    }
+    public void accionCrearActualizar(){
                         txtContraseña.setEnabled(true);
                         txtFecha.setEnabled(true);
                         txtNivel.setEnabled(true);
@@ -214,12 +220,37 @@ public class MetodosMenu01 {
                         txtBuscar.setEnabled(true);
                         btnBitacora.setEnabled(true);
                         btnBuscar.setEnabled(true);
-                        accionCrearActualizar="actualizar";
-                        Menu01 menu01=new Menu01();
-                        menu01.setAccionCrearActualizar(accionCrearActualizar);
+        
+    }
+    public void accionVerEliminar(){
+                        txtContraseña.setEnabled(false);
+                        txtFecha.setEnabled(false);
+                        txtNivel.setEnabled(false);
+                        txtNombre.setEnabled(false);
+                        btnCrear.setEnabled(false);
+                        txtBuscar.setEnabled(true);
+                        btnBitacora.setEnabled(true);
+                        btnBuscar.setEnabled(true);
+    }
+    */
+    
+   public void agregarAccionBuscar(JTextField m){
+        m.addKeyListener(new KeyAdapter(){
+            @Override
+            public void keyTyped(KeyEvent e){
+                char c=e.getKeyChar();
+                
+                    buscar();
+                     if(c==KeyEvent.VK_BACK_SPACE){
+                   
+                    MetodosMenu01  metodo =new MetodosMenu01(txtBuscar.getText(),modelo,tblUsuario);
+                   //tblUsuario.setModel(new DefaultTableModel());
+                    metodo.buscar();
                 }
+                
             }
         });
     }
     
+
 }
