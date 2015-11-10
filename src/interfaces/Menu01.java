@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import mundo.ConectarDB;
 import javax.swing.JMenuItem;
+import mundo.MetodosMenu01;
 import org.apache.commons.codec.digest.DigestUtils;// modulo common
 
 /**
@@ -37,7 +38,7 @@ public class Menu01 extends javax.swing.JFrame {
         this.perfil = perfil;
         initComponents();
 
-        cargarCombo();
+        cargarJMenuItem();
         antesCerrar();
         desHabilitar();
     }
@@ -108,7 +109,7 @@ public class Menu01 extends javax.swing.JFrame {
         }
     }
 
-    public void cargarCombo() {
+    public void cargarJMenuItem() {
         //JOptionPane.showMessageDialog(null, perfil);
         ConectarDB coneccion = new ConectarDB();
         String contador = "";
@@ -218,83 +219,16 @@ public class Menu01 extends javax.swing.JFrame {
         txtNivel.setText("");
         txtNombre.setText("");
         
+        // tblUsuario.setModel(new DefaultTableModel());
+        
     }
-    public void buscar(){
-        String parametroBusqueda =txtBuscar.getText();
-        String titulo[]={"Nombre Usuario","Fecha Limite","Nivel Acceso"};
-        String[] registro=new String[3];
-        modelo= new DefaultTableModel(null,titulo);
-        
-        
-        String sSQL="select login, fecha, nivel from usuario"
-                + " where concat(login,' ', fecha,' ',nivel)"
-                + " like '%"+parametroBusqueda+"%'";
-        
-        ConectarDB conectar = new ConectarDB();
-        Connection con = conectar.coneccion();
-        //int ser = 0;
-        
-        try {
-            PreparedStatement pst = con.prepareStatement(sSQL);
-            ResultSet rs = pst.executeQuery(sSQL);
-            while (rs.next()) {
-              registro[0]=rs.getString("login");
-              registro[1]=rs.getString("fecha");
-              registro[2]=rs.getString("nivel");
-              
-              modelo.addRow(registro);
-
-            }
-            tblUsuario.setModel(modelo);
-            //pst.executeUpdate(sSQL);
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "error " + ex);
-            //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    public void verBitacora(){
-        String parametroBusqueda =txtBuscar.getText();
-        String titulo[]={"Login","Fecha ingreso","Hora Ingreso", "Fecha salida", "Hora salida"};
-        String[] registro=new String[5];
-        modelo= new DefaultTableModel(null,titulo);
-        
-        
-        String sSQL="select serial, login, fecha_ingreso,hora_ingreso,fecha_salida, hora_salida from bitacora"
-                    + " where concat(login,' ', fecha_ingreso,' ',fecha_salida,' ',hora_ingreso,' ', hora_salida)"
-                    + " like '%"+parametroBusqueda+"%'";
-        
-        ConectarDB conectar = new ConectarDB();
-        Connection con = conectar.coneccion();
-        //int ser = 0;
-        
-        try {
-            PreparedStatement pst = con.prepareStatement(sSQL);
-            ResultSet rs = pst.executeQuery(sSQL);
-            while (rs.next()) {
-              registro[0]=rs.getString("login");
-              registro[1]=rs.getString("fecha_ingreso");
-              registro[2]=rs.getString("hora_ingreso");
-              registro[3]=rs.getString("fecha_salida");
-              registro[4]=rs.getString("hora_salida");
-              modelo.addRow(registro);
-              serie.add(rs.getString("serial"));
-
-            }
-            tblUsuario.setModel(modelo);
-            //pst.executeUpdate(sSQL);
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "error " + ex);
-            //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+    
     public void crearUsuario() {
         ConectarDB conectar = new ConectarDB();
         Connection con = conectar.coneccion();
         String fechaLimite = txtFecha.getText();
         
-        String pass=txtContraseña.getText();
+        String pass=txtContraseña.getPassword().toString();
         String passEncriptado= DigestUtils.md5Hex(pass);
         int estado=0;
          sSQL = "select curdate() <= '"+fechaLimite+"'";
@@ -416,6 +350,7 @@ public class Menu01 extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblUsuario = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         txtBuscar = new javax.swing.JTextField();
         btnBuscar = new javax.swing.JButton();
@@ -480,15 +415,23 @@ public class Menu01 extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Creción"));
         jPanel1.setToolTipText("");
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Invitado", "Editor", "Administrador" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 193, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(85, Short.MAX_VALUE)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 119, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(212, Short.MAX_VALUE)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(55, 55, 55))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 190, 310));
@@ -608,13 +551,16 @@ public class Menu01 extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        buscar();
+        MetodosMenu01  metodo =new MetodosMenu01(txtBuscar.getText(),modelo,tblUsuario);
+        metodo.buscar();
         stringSeleccion= "buscar";
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnBitacoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBitacoraActionPerformed
         // TODO add your handling code here:
-        verBitacora();
+        MetodosMenu01 metodo= new MetodosMenu01(txtBuscar.getText(),modelo,tblUsuario,serie);
+        metodo.verBitacora();
+        //verBitacora();
         stringSeleccion="bitacora";
     }//GEN-LAST:event_btnBitacoraActionPerformed
 
@@ -684,6 +630,7 @@ public class Menu01 extends javax.swing.JFrame {
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCrear;
     private javax.swing.JButton btnSalida;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
