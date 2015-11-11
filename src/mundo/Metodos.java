@@ -26,9 +26,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Metodos {
     DefaultTableModel modelo;//= new DefaultTableModel();
+    JTable tblUsuario;
+    private int fila, columna;
 
-    public Metodos(DefaultTableModel modelo) {
+    public Metodos(DefaultTableModel modelo,JTable tblUsuario, int fila, int columna) {
         this.modelo = modelo;
+        this.tblUsuario=tblUsuario;
+        this.fila=fila;
+        this.columna=columna;
     }
     ConectarDB conectar =new ConectarDB();
     
@@ -41,9 +46,32 @@ public class Metodos {
              public void tableChanged(TableModelEvent e){
                  //poner metod que se quiere accinar al editar campo de la tabla
                 JOptionPane.showMessageDialog(null, "Editando");
+               // comboBuscar();
              }
          });
     }
+    public void comboBuscar() {
+
+       /*
+            int editadoFila = tblUsuario.getEditingRow();
+        int editadoColumna =tblUsuario.getEditingColumn();
+        int seleccionadoColumna = tblUsuario.getSelectedRow();
+        int seleccionadoFila = tblUsuario.getSelectedColumn();
+        String celdaSeleccionada = "";
+        */
+       
+           String celdaSeleccionada = (String) tblUsuario.getModel().getValueAt(fila, columna);
+      
+            //celdaSeleccionada = (String) tblUsuario.getModel().getValueAt(editadoFila, 0);
+        
+
+        // 
+        JOptionPane.showMessageDialog(null, " " + fila + " " + columna + " " + celdaSeleccionada);
+
+
+        
+    }
+    
     
     
   

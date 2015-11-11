@@ -16,7 +16,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  *
@@ -33,9 +36,28 @@ public class MetodosMenu01 {
     //-------------------------------------
     private String parametroBusqueda;
     private DefaultTableModel  modelo;
+    
+    private String usuarioSeleccionado;
+
+    public DefaultTableModel getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(DefaultTableModel modelo) {
+        this.modelo = modelo;
+    }
     private JTable tblUsuario;
+    private int editadoFila,EditadoColumna, serieSeleccionada;
     //------------------------------------------
     ArrayList serie;
+
+    public ArrayList getSerie() {
+        return serie;
+    }
+
+    public void setSerie(ArrayList serie) {
+        this.serie = serie;
+    }
     //-------------------------------------
     private int perfil;
     private JMenu mPermiso;
@@ -64,18 +86,18 @@ public class MetodosMenu01 {
     }
     
     //contructor para verBitacora
-    public MetodosMenu01(String parametroBusqueda, DefaultTableModel modelo, JTable tblUsuario, ArrayList serie) {
+    public MetodosMenu01(String parametroBusqueda, DefaultTableModel modelo, JTable tblUsuario, 
+            ArrayList serie, int editadoFila,int EditadoColumna,int serieSeleccionada, String usuarioSeleccionado) {
         this.parametroBusqueda = parametroBusqueda;
         this.modelo = modelo;
         this.tblUsuario = tblUsuario;
         this.serie = serie;
+        this.editadoFila= editadoFila;
+        this.EditadoColumna=EditadoColumna;
+        this.serieSeleccionada= serieSeleccionada;
+        this.usuarioSeleccionado=usuarioSeleccionado;
     }
     //contructor para buscar
-    public MetodosMenu01(String parametroBusqueda, DefaultTableModel modelo, JTable tblUsuario) {
-        this.parametroBusqueda = parametroBusqueda;
-        this.modelo = modelo;
-        this.tblUsuario = tblUsuario;
-    }
     
             
     public void buscar(){
@@ -107,6 +129,7 @@ public class MetodosMenu01 {
             JOptionPane.showMessageDialog(null, "error " + ex);
             //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
+        usuarioSeleccionado = (String) modelo.getValueAt(editadoFila, 0);
     }
     
     public void verBitacora(){
@@ -243,13 +266,75 @@ public class MetodosMenu01 {
                     buscar();
                      if(c==KeyEvent.VK_BACK_SPACE){
                    
-                    MetodosMenu01  metodo =new MetodosMenu01(txtBuscar.getText(),modelo,tblUsuario);
+                   // MetodosMenu01  metodo =new MetodosMenu01(txtBuscar.getText(),modelo,tblUsuario);
                    //tblUsuario.setModel(new DefaultTableModel());
-                    metodo.buscar();
+                  //  metodo.buscar();
                 }
                 
             }
         });
+    }
+   
+   
+   public void enterTabla(){
+        modelo.addTableModelListener(new TableModelListener(){
+             @Override
+             public void tableChanged(TableModelEvent e){
+                 //poner metod que se quiere accinar al editar campo de la tabla
+                JOptionPane.showMessageDialog(null, "Editando");
+               
+              // actualizarUsuario();
+               // comboBuscar();
+             }
+         });
+    }
+   
+   public void actualizarUsuario() {
+        int editado = tblUsuario.getEditingRow();
+        
+        //String strs= tblUsuario.is
+         conectar = new ConectarDB();
+        con = conectar.coneccion();
+        //String fechaLimite = txtFecha.getText();
+        int estado = 0;
+        //String sSQL = "";
+        //nivel = (int) niveles.get(cboNivel.getSelectedIndex());
+        
+        /*
+        sSQL = "select curdate() <= '" + fechaLimite + "'";
+
+        try {
+            PreparedStatement pst = con.prepareStatement(sSQL);
+            ResultSet rs = pst.executeQuery(sSQL);
+            while (rs.next()) {
+                estado = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "introduzca la fecha con formato yyyy,mmm,dd ");
+        }
+*/
+        sSQL = "update usuario set login=?"//,password=?, estado=?, fecha=?, nivel=?"
+                + " where login = '"+usuarioSeleccionado+"' ";
+        try {
+            PreparedStatement pst = con.prepareStatement(sSQL);
+            //ResultSet rs = pst.executeQuery(sSQL);
+
+            pst.setString(1, usuarioSeleccionado);
+          //  pst.setString(2, DigestUtils.md5Hex(txtContraseña.getText()));
+          //  pst.setInt(3, estado);
+           // pst.setString(4, fechaLimite);
+           // pst.setInt(5, nivel);
+
+            pst.executeUpdate();
+            //pst.ex
+            //pst.executeUpdate(sSQL);
+            JOptionPane.showMessageDialog(null, "Usuario " + usuarioSeleccionado + " Actualizado");
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "error " + ex);
+            //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
     
 

@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
@@ -17,7 +16,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import mundo.ConectarDB;
@@ -31,24 +29,20 @@ import org.apache.commons.codec.digest.DigestUtils;// modulo common
  * @author cmch05
  */
 public class Menu01 extends javax.swing.JFrame {
-    private int perfil,nivel;
+
+    private int perfil, nivel;
     private DefaultTableModel modelo;
-    private ArrayList serie=new ArrayList();
-    //private ArrayList nombreMenuItem=new ArrayList();
-    private String stringSeleccion,sSQL;
+    private ArrayList serie = new ArrayList();
+    private String stringSeleccion, sSQL;
     private String accionCrearActualizar;
     private Connection con;
-    private PreparedStatement pst ;
-    private ResultSet rs ;
+    private PreparedStatement pst;
+    private ResultSet rs;
     private String itemComboBox;
     private ArrayList niveles = new ArrayList();
-    
-    
-/*
-    public Menu01(String accionCrearActualizar) {
-        this.accionCrearActualizar = accionCrearActualizar;
-    }
-    */
+    private int editadoFila, editadoColumna ,serieSeleccionada;
+    String usuarioSeleccionado;   
+
     public void setAccionCrearActualizar(String accionCrearActualizar) {
         this.accionCrearActualizar = accionCrearActualizar;
     }
@@ -60,20 +54,12 @@ public class Menu01 extends javax.swing.JFrame {
 
         cargarJMenuItem();
         seleccioNivel();
-        //MetodosMenu01 metodo=new MetodosMenu01();
-        //metodo.cargarJMenuItem();
-        //prueva();
-       
-        agregarAccionBuscar(txtBuscar);                
+
+        agregarAccionBuscar(txtBuscar);
         antesCerrar();
         desHabilitar();
     }
-    /*
-    public void prueva(){
-        MetodosMenu01 metodo=new MetodosMenu01( txtNombre,  txtFecha,  txtContraseña, 
-            txtNivel,  txtBuscar,  btnBuscar,  btnBitacora,  btnCrear); 
-    }
-*/
+
     public int getPerfil() {
         return perfil;
     }
@@ -86,11 +72,8 @@ public class Menu01 extends javax.swing.JFrame {
     public Menu01() {
         setResizable(false);
         initComponents();
-           seleccioNivel();
-        //cargarCombo();
-        //antesCerrar();
-        //cboUsuario.setEnabled(false);
-       // desHabilitar();
+        seleccioNivel();
+
     }
 
     // previene la aslida y despues escucha el boton de salida y le dice que haga algo
@@ -108,7 +91,7 @@ public class Menu01 extends javax.swing.JFrame {
 
     public void registarSalida() {
         ConectarDB conectar = new ConectarDB();
-         con = conectar.coneccion();
+        con = conectar.coneccion();
         int ser = 0;
         String sSQL = "select serial from bitacora "
                 + "order by serial desc limit 1 ";
@@ -119,7 +102,7 @@ public class Menu01 extends javax.swing.JFrame {
                 ser = rs.getInt("serial");
 
             }
-           JOptionPane.showMessageDialog(null, ser);
+            JOptionPane.showMessageDialog(null, ser);
             sSQL = "update bitacora set fecha_salida = curdate() , hora_salida = curtime() "
                     + "where serial ='" + ser + "' ";
             //pst= con.prepareStatement(sSQL);
@@ -127,7 +110,6 @@ public class Menu01 extends javax.swing.JFrame {
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "error " + ex);
-            //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
         //this.dispose();
         if (suiche == true) {
@@ -144,94 +126,90 @@ public class Menu01 extends javax.swing.JFrame {
         //JOptionPane.showMessageDialog(null, perfil);
         ConectarDB coneccion = new ConectarDB();
         String contador = "";
-          con = coneccion.coneccion();
-        
+        con = coneccion.coneccion();
+
         sSQL = "select distinct permiso from perfil_permiso left join permiso on "
-                + "perfil_permiso.id_perfil='"+perfil+"'and  perfil_permiso.id_permiso=permiso.id";
-        
-        
+                + "perfil_permiso.id_perfil='" + perfil + "'and  perfil_permiso.id_permiso=permiso.id";
+
         //select permiso from perfil_permiso left join permiso on perfil_permiso.id_perfil='2'and  perfil_permiso.id_permiso=permiso.id;
         try {
             PreparedStatement pst = con.prepareStatement(sSQL);
             ResultSet rs = pst.executeQuery(sSQL);
-            int i=0;
+            int i = 0;
             while (rs.next()) {
-                if(rs.getString("permiso")!=null){
-                
-                mPermiso.add(rs.getString("permiso")+" usuario");
-                   agregarAccionMenu(mPermiso.getItem(i));
-                   //nombreMenuItem.add(mPermiso.getItem(i).getText());
-               // cboTablas.addItem(rs.getString("id_perfil"));
-               
-               //JOptionPane.showMessageDialog(null, mPermiso.getItem(i).getText());
-               i++;
+                if (rs.getString("permiso") != null) {
+
+                    mPermiso.add(rs.getString("permiso") + " usuario");
+                    agregarAccionMenu(mPermiso.getItem(i));
+                    //nombreMenuItem.add(mPermiso.getItem(i).getText());
+                    // cboTablas.addItem(rs.getString("id_perfil"));
+
+                    //JOptionPane.showMessageDialog(null, mPermiso.getItem(i).getText());
+                    i++;
                 }
             }
-            
-              //JOptionPane.showMessageDialog(null, "exito ");
+
+            //JOptionPane.showMessageDialog(null, "exito ");
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "error " + ex);
             //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void agregarAccionMenu(JMenuItem m){
-        
+
+    public void agregarAccionMenu(JMenuItem m) {
+
         m.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                
-                if(m.getText().equals("ver usuario")){
+
+                if (m.getText().equals("ver usuario")) {
                     txtContraseña.setEnabled(false);
-                        txtFecha.setEnabled(false);
-                        cboNivel.setEnabled(false);
-                        txtNombre.setEnabled(false);
-                        btnCrear.setEnabled(false);
-                        txtBuscar.setEnabled(true);
-                        btnBitacora.setEnabled(true);
-                        btnBuscar.setEnabled(true);
-                        
-                        
-                }
-                else if(m.getText().equals("crear usuario")){
-                    
-                        txtContraseña.setEnabled(true);
-                        txtFecha.setEnabled(true);
-                        cboNivel.setEnabled(true);
-                        txtNombre.setEnabled(true);
-                        btnCrear.setEnabled(true);
-                        txtBuscar.setEnabled(true);
-                        btnBitacora.setEnabled(true);
-                        btnBuscar.setEnabled(true);
-                        accionCrearActualizar="crear";
-                        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Crear Usuario"));
-                    
-                }
-                else if(m.getText().equals("actualizar usuario")){
-                    
-                    
-                        txtContraseña.setEnabled(true);
-                        txtFecha.setEnabled(true);
-                        cboNivel.setEnabled(true);
-                        txtNombre.setEnabled(true);
-                        btnCrear.setEnabled(true);
-                        txtBuscar.setEnabled(true);
-                        btnBitacora.setEnabled(true);
-                        btnBuscar.setEnabled(true);
-                        accionCrearActualizar="actualizar";
-                        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Actualizar Usuario"));
+                    txtFecha.setEnabled(false);
+                    cboNivel.setEnabled(false);
+                    txtNombre.setEnabled(false);
+                    btnCrear.setEnabled(false);
+                    txtBuscar.setEnabled(true);
+                    //btnBitacora.setEnabled(true);
+                    //btnBuscar.setEnabled(true);
+                    cboBuscar.setEnabled(true);
+
+                } else if (m.getText().equals("crear usuario")) {
+
+                    txtContraseña.setEnabled(true);
+                    txtFecha.setEnabled(true);
+                    cboNivel.setEnabled(true);
+                    txtNombre.setEnabled(true);
+                    btnCrear.setEnabled(true);
+                    txtBuscar.setEnabled(true);
+                    //btnBitacora.setEnabled(true);
+                    //btnBuscar.setEnabled(true);
+                    cboBuscar.setEnabled(true);
+                    accionCrearActualizar = "crear";
+                    jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Crear Usuario"));
+
+                } else if (m.getText().equals("actualizar usuario")) {
+
+                    txtContraseña.setEnabled(true);
+                    txtFecha.setEnabled(true);
+                    cboNivel.setEnabled(true);
+                    txtNombre.setEnabled(true);
+                    btnCrear.setEnabled(true);
+                    txtBuscar.setEnabled(true);
+                    //btnBitacora.setEnabled(true);
+                    //btnBuscar.setEnabled(true);
+                    cboBuscar.setEnabled(true);
+                    accionCrearActualizar = "actualizar";
+                    jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Actualizar Usuario"));
                 }
             }
         });
     }
-   
-      
-    
-    
-   
-    public void ejecutarAccion(){
-        String Mselct =(String) mPermiso.getItem(mPermiso.getWidth()).getText();
+
+    public void ejecutarAccion() {
+        String Mselct = (String) mPermiso.getItem(mPermiso.getWidth()).getText();
         JOptionPane.showMessageDialog(null, Mselct);
     }
-    public void desHabilitar(){
+
+    public void desHabilitar() {
         // txtBuscar.setEnabled(false);
         txtContraseña.setEnabled(false);
         txtFecha.setEnabled(false);
@@ -239,60 +217,61 @@ public class Menu01 extends javax.swing.JFrame {
         txtNombre.setEnabled(false);
         btnCrear.setEnabled(false);
         txtBuscar.setEnabled(false);
-        btnBitacora.setEnabled(false);
-        btnBuscar.setEnabled(false);
-        
+        //btnBitacora.setEnabled(false);
+        //btnBuscar.setEnabled(false);
+        cboBuscar.setEnabled(false);
+
     }
-    public void habilitarActualizarCrear(){
-        
+
+    public void habilitarActualizarCrear() {
+
     }
-    public void habilitarVerBorrar(){
-    
+
+    public void habilitarVerBorrar() {
+
     }
-   
-    public void borrar(){
+
+    public void borrar() {
         txtBuscar.setText("");
         txtContraseña.setText("");
         txtFecha.setText("");
-        
+
         txtNombre.setText("");
-        
+
         // tblUsuario.setModel(new DefaultTableModel());
-        
     }
-    
+
     public void crearUsuario() {
-        nivel= (int)niveles.get(cboNivel.getSelectedIndex());
+        nivel = (int) niveles.get(cboNivel.getSelectedIndex());
         ConectarDB conectar = new ConectarDB();
-         con = conectar.coneccion();
+        con = conectar.coneccion();
         String fechaLimite = txtFecha.getText();
-        
-        String pass=txtContraseña.getPassword().toString();
-        String passEncriptado= DigestUtils.md5Hex(pass);
-        int estado=0;
-         sSQL = "select curdate() <= '"+fechaLimite+"'";
-        
+
+        String pass = txtContraseña.getPassword().toString();
+        String passEncriptado = DigestUtils.md5Hex(pass);
+        int estado = 0;
+        sSQL = "select curdate() <= '" + fechaLimite + "'";
+
         try {
             PreparedStatement pst = con.prepareStatement(sSQL);
             ResultSet rs = pst.executeQuery(sSQL);
             while (rs.next()) {
-                estado= rs.getInt(1);
+                estado = rs.getInt(1);
             }
             JOptionPane.showMessageDialog(null, estado);
 
-        } 
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "introduzca la fecha con formato yyyy,mmm,dd ");
             //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            
+
         }
-        
+
         sSQL = "insert into usuario(login, password, estado, fecha, nivel)"
-                + " values(?,?,?,?,?) " ;
+                + " values(?,?,?,?,?) ";
         try {
             PreparedStatement pst = con.prepareStatement(sSQL);
             //ResultSet rs = pst.executeQuery(sSQL);
-            
+
             pst.setString(1, txtNombre.getText());
             pst.setString(2, passEncriptado);
             pst.setInt(3, estado);
@@ -301,113 +280,147 @@ public class Menu01 extends javax.swing.JFrame {
             //pst.
             //pst.executeUpdate(sSQL);
             pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Usuario creado" );
+            JOptionPane.showMessageDialog(null, "Usuario creado");
 
-        } 
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "error " + ex);
             //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
-        
+
     }
-    
+
     public void actualizarUsuario() {
-        int editado= tblUsuario.getEditingRow();
+        int editado = tblUsuario.getEditingRow();
         //String strs= tblUsuario.is
         ConectarDB conectar = new ConectarDB();
-         con = conectar.coneccion();
+        con = conectar.coneccion();
         String fechaLimite = txtFecha.getText();
-        int estado=0;
+        int estado = 0;
         String sSQL = "";
-        nivel= (int)niveles.get(cboNivel.getSelectedIndex());
-        sSQL = "select curdate() <= '"+fechaLimite+"'";
-        
+        nivel = (int) niveles.get(cboNivel.getSelectedIndex());
+        sSQL = "select curdate() <= '" + fechaLimite + "'";
+
         try {
             PreparedStatement pst = con.prepareStatement(sSQL);
             ResultSet rs = pst.executeQuery(sSQL);
             while (rs.next()) {
-                estado= rs.getInt(1);
+                estado = rs.getInt(1);
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "introduzca la fecha con formato yyyy,mmm,dd ");
         }
         sSQL = "update usuario set login=?,password=?, estado=?, fecha=?, nivel=?"
-                + " where login = 'usuario8' " ;
+                + " where login = 'usuario8' ";
         try {
             PreparedStatement pst = con.prepareStatement(sSQL);
             //ResultSet rs = pst.executeQuery(sSQL);
-            
+
             pst.setString(1, txtNombre.getText());
             pst.setString(2, DigestUtils.md5Hex(txtContraseña.getText()));
             pst.setInt(3, estado);
             pst.setString(4, fechaLimite);
             pst.setInt(5, nivel);
-            
-              pst.executeUpdate();
+
+            pst.executeUpdate();
             //pst.ex
             //pst.executeUpdate(sSQL);
-            JOptionPane.showMessageDialog(null, "Usuario " +txtNombre.getText()+" Actualizado" );
-        
-        } 
-        catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "error " + ex);
-            //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-       
-        
-    }
-    public void eliminarUsuario(){
-        
-    }
-    public void seleccioNivel(){
-        //JOptionPane.showMessageDialog(null, perfil);
-        ConectarDB coneccion = new ConectarDB();
-        
-        con = coneccion.coneccion();
-        
-        sSQL = "select * from perfil order by 1 desc";
-        
-        
-        //select permiso from perfil_permiso left join permiso on perfil_permiso.id_perfil='2'and  perfil_permiso.id_permiso=permiso.id;
-        try {
-             pst = con.prepareStatement(sSQL);
-             rs = pst.executeQuery(sSQL);
-           
-            while (rs.next()) {
-                
-                
-                cboNivel.addItem(rs.getString("descripcion"));
-                niveles.add(rs.getInt("id"));
-                //JOptionPane.showMessageDialog(null, niveles.get(0));
-                
-            }
-           // pst.execute();
-            
-              //JOptionPane.showMessageDialog(null, "exito ");
+            JOptionPane.showMessageDialog(null, "Usuario " + txtNombre.getText() + " Actualizado");
+
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "error " + ex);
             //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    public void agregarAccionBuscar(JTextField m){
-        m.addKeyListener(new KeyAdapter(){
+
+    public void eliminarUsuario() {
+
+    }
+
+    public void seleccioNivel() {
+        //JOptionPane.showMessageDialog(null, perfil);
+        ConectarDB coneccion = new ConectarDB();
+
+        con = coneccion.coneccion();
+
+        sSQL = "select * from perfil order by 1 desc";
+
+        //select permiso from perfil_permiso left join permiso on perfil_permiso.id_perfil='2'and  perfil_permiso.id_permiso=permiso.id;
+        try {
+            pst = con.prepareStatement(sSQL);
+            rs = pst.executeQuery(sSQL);
+
+            while (rs.next()) {
+
+                cboNivel.addItem(rs.getString("descripcion"));
+                niveles.add(rs.getInt("id"));
+                //JOptionPane.showMessageDialog(null, niveles.get(0));
+
+            }
+            // pst.execute();
+
+            //JOptionPane.showMessageDialog(null, "exito ");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "error " + ex);
+            //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void agregarAccionBuscar(JTextField m) {
+        m.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyTyped(KeyEvent e){
-                char c=e.getKeyChar();
-                 MetodosMenu01  metodo =new MetodosMenu01(txtBuscar.getText(),modelo,tblUsuario);
-                    metodo.buscar();
-                     if(c==KeyEvent.VK_BACK_SPACE){
-                   
-                   
-                   //tblUsuario.setModel(new DefaultTableModel());
-                    metodo.buscar();
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+
+                comboBuscar();
+                if (c == KeyEvent.VK_BACK_SPACE) {
+                    comboBuscar();
+
+                    //tblUsuario.setModel(new DefaultTableModel());
                 }
-                
+
             }
         });
+    }
+
+    public void comboBuscar() {
+        //editadoFila = tblUsuario.getEditingRow();
+       /// editadoColumna =tblUsuario.getEditingColumn();
+        //int seleccionadoColumna = tblUsuario.getSelectedColumn();
+        //int seleccionadoFila = tblUsuario.getSelectedRow();
+        
+
+        if (cboBuscar.getSelectedIndex() == 0) {
+            
+            
+            MetodosMenu01 metodo = new MetodosMenu01(txtBuscar.getText(), modelo, tblUsuario, serie,editadoFila,
+                                        editadoColumna, serieSeleccionada, usuarioSeleccionado);
+            metodo.buscar();
+            stringSeleccion = "buscar";
+            modelo= metodo.getModelo();
+            metodo.enterTabla();
+            
+            
+            
+        } else if (cboBuscar.getSelectedIndex() == 1) {
+            
+             //usuarioSeleccionado = (String) serie.get(editadoFila);
+            //serieSeleccionada=Integer.parseInt(serie.get(editadoFila).toString());
+            
+            MetodosMenu01 metodo = new MetodosMenu01(txtBuscar.getText(), modelo, tblUsuario, serie,editadoFila,
+                                        editadoColumna, serieSeleccionada, usuarioSeleccionado);
+            metodo.verBitacora();
+            //verBitacora();
+            stringSeleccion = "bitacora";
+            metodo.verBitacora();
+            serie = metodo.getSerie();
+            modelo= metodo.getModelo();
+            metodo.enterTabla();
+
+            
+            
+        }
     }
 
     /**
@@ -434,8 +447,6 @@ public class Menu01 extends javax.swing.JFrame {
         cboNivel = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         txtBuscar = new javax.swing.JTextField();
-        btnBuscar = new javax.swing.JButton();
-        btnBitacora = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         btnBorrar = new javax.swing.JButton();
         cboBuscar = new javax.swing.JComboBox<>();
@@ -517,20 +528,6 @@ public class Menu01 extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Busquedas"));
         jPanel2.setToolTipText("");
 
-        btnBuscar.setText("Buscar usuario");
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
-            }
-        });
-
-        btnBitacora.setText("Buscar Bitacora");
-        btnBitacora.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBitacoraActionPerformed(evt);
-            }
-        });
-
         jLabel5.setText("Parametros de busqueda");
 
         btnBorrar.setText("Limpiar");
@@ -541,6 +538,11 @@ public class Menu01 extends javax.swing.JFrame {
         });
 
         cboBuscar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Buscar Usuario", "Buscar Bitacora" }));
+        cboBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboBuscarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -551,8 +553,6 @@ public class Menu01 extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnBitacora, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnBorrar, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(cboBuscar, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -566,11 +566,7 @@ public class Menu01 extends javax.swing.JFrame {
                 .addComponent(jLabel5)
                 .addGap(6, 6, 6)
                 .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19)
-                .addComponent(btnBuscar)
-                .addGap(18, 18, 18)
-                .addComponent(btnBitacora)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 156, Short.MAX_VALUE)
                 .addComponent(btnBorrar)
                 .addGap(31, 31, 31))
         );
@@ -612,55 +608,49 @@ public class Menu01 extends javax.swing.JFrame {
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
         // TODO add your handling code here:
-        borrar();
-        int editado= tblUsuario.getEditingRow();
-        int editad2= tblUsuario.getSelectedRow();
-        String editado3="";
-        if(stringSeleccion.equals("buscar")){
-            editado3=(String) modelo.getValueAt(editad2, 0);
+       // borrar();
+         editadoFila = tblUsuario.getEditingRow();
+        editadoColumna =tblUsuario.getEditingColumn();
+        int seleccionadoColumna = tblUsuario.getSelectedColumn();
+        int seleccionadoFila = tblUsuario.getSelectedRow();
+        
+        
+        //JOptionPane.showMessageDialog(null,cboBuscar.getSelectedIndex());
+
+        if (cboBuscar.getSelectedIndex()==0) {
+           usuarioSeleccionado = (String) modelo.getValueAt(editadoFila, 0);
+           
+           JOptionPane.showMessageDialog(null, " " + seleccionadoFila + " " + seleccionadoColumna + " "+
+                usuarioSeleccionado);
+        } 
+        else if (cboBuscar.getSelectedIndex()==1) {
+            usuarioSeleccionado = (String) serie.get(editadoFila);
+            serieSeleccionada=Integer.parseInt(serie.get(editadoFila).toString());
+            
+            
+            JOptionPane.showMessageDialog(null, " " + seleccionadoFila + " " + seleccionadoColumna + " "+
+                usuarioSeleccionado+" "+ serieSeleccionada);
         }
-        else if(stringSeleccion.equals("bitacora")){
-            editado3=(String) serie.get(editad2);
-        }
+
+        // 
         
-        
-       // 
-        
-        JOptionPane.showMessageDialog(null, " "+editado+" "+editad2+" "+editado3);
-        
+
         //ejecutarAccion();
     }//GEN-LAST:event_btnBorrarActionPerformed
 
-    
-    
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
-        MetodosMenu01  metodo =new MetodosMenu01(txtBuscar.getText(),modelo,tblUsuario);
-        metodo.buscar();
-        stringSeleccion= "buscar";
-    }//GEN-LAST:event_btnBuscarActionPerformed
-
-    private void btnBitacoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBitacoraActionPerformed
-        // TODO add your handling code here:
-        MetodosMenu01 metodo= new MetodosMenu01(txtBuscar.getText(),modelo,tblUsuario,serie);
-        metodo.verBitacora();
-        //verBitacora();
-        stringSeleccion="bitacora";
-    }//GEN-LAST:event_btnBitacoraActionPerformed
 
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
-        
-            // TODO add your handling code here:
-            if(accionCrearActualizar.equals("crear")){
-                crearUsuario();
-            }
-            else if(accionCrearActualizar.equals("actualizar")){
-                actualizarUsuario();
-            } 
-            //crearUsuario();
-           // 
-           
-        
+
+        // TODO add your handling code here:
+        if (accionCrearActualizar.equals("crear")) {
+            crearUsuario();
+        } else if (accionCrearActualizar.equals("actualizar")) {
+            actualizarUsuario();
+        }
+        //crearUsuario();
+        // 
+
+
     }//GEN-LAST:event_btnCrearActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -671,6 +661,14 @@ public class Menu01 extends javax.swing.JFrame {
         // TODO add your handling code here:
         //agregarAccionMenu(jMenuItem1);
     }//GEN-LAST:event_mPermisoActionPerformed
+
+    private void cboBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboBuscarActionPerformed
+        // TODO add your handling code here:
+        MetodosMenu01 metodo= new MetodosMenu01();
+        txtBuscar.setText("");
+        txtBuscar.grabFocus();
+        comboBuscar();
+    }//GEN-LAST:event_cboBuscarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -709,9 +707,7 @@ public class Menu01 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBitacora;
     private javax.swing.JButton btnBorrar;
-    private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCrear;
     private javax.swing.JButton btnSalida;
     private javax.swing.JComboBox<String> cboBuscar;

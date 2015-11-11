@@ -9,8 +9,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.plaf.ComboBoxUI;
 import javax.swing.table.DefaultTableModel;
 import mundo.Metodos;
+import mundo.MetodosMenu01;
 
 /**
  *
@@ -33,13 +35,13 @@ public class MultiMenu extends javax.swing.JFrame {
     
     private void editarTabla(){
         
-        tabla =tabla1;
-         fila= tabla1.getEditingRow();
-         columna=tabla1.getEditingColumn();
+        tabla =tblUsuario;
+         fila= tblUsuario.getEditingRow();
+         columna=tblUsuario.getEditingColumn();
          
-         DefaultTableModel model= (DefaultTableModel)tabla1.getModel();
+         DefaultTableModel model= (DefaultTableModel)tblUsuario.getModel();
          
-         Metodos metodos=new Metodos(model);
+         Metodos metodos=new Metodos(model, tblUsuario, fila,columna);
          
          metodos.enterTabla();
          
@@ -75,12 +77,12 @@ public class MultiMenu extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
-        tabla1 = new javax.swing.JTable();
+        tblUsuario = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        tabla1.setModel(new javax.swing.table.DefaultTableModel(
+        tblUsuario.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -91,7 +93,7 @@ public class MultiMenu extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(tabla1);
+        jScrollPane2.setViewportView(tblUsuario);
 
         jButton1.setText("jButton1");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -129,9 +131,14 @@ public class MultiMenu extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        //comboBuscar();
        editarTabla();
+        String celdaSeleccionada = (String) tblUsuario.getModel().getValueAt(fila, columna);
+        JOptionPane.showMessageDialog(null,celdaSeleccionada);
+       
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -170,6 +177,6 @@ public class MultiMenu extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable tabla1;
+    private javax.swing.JTable tblUsuario;
     // End of variables declaration//GEN-END:variables
 }
