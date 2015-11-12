@@ -73,7 +73,7 @@ public class Menu01 extends javax.swing.JFrame {
         setResizable(false);
         initComponents();
         seleccioNivel();
-
+        
     }
 
     // previene la aslida y despues escucha el boton de salida y le dice que haga algo
@@ -310,7 +310,7 @@ public class Menu01 extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "introduzca la fecha con formato yyyy,mmm,dd ");
         }
         sSQL = "update usuario set login=?,password=?, estado=?, fecha=?, nivel=?"
-                + " where login = 'usuario8' ";
+                + " where login = 'usuario9' ";
         try {
             PreparedStatement pst = con.prepareStatement(sSQL);
             //ResultSet rs = pst.executeQuery(sSQL);
@@ -390,7 +390,6 @@ public class Menu01 extends javax.swing.JFrame {
         //int seleccionadoColumna = tblUsuario.getSelectedColumn();
         //int seleccionadoFila = tblUsuario.getSelectedRow();
         
-
         if (cboBuscar.getSelectedIndex() == 0) {
             
             
@@ -399,8 +398,11 @@ public class Menu01 extends javax.swing.JFrame {
             metodo.buscar();
             stringSeleccion = "buscar";
             modelo= metodo.getModelo();
-            metodo.enterTabla();
             
+            // usuarioSeleccionado();
+             metodo.seleccionTabla();
+             metodo.enterTabla();
+            // usuarioSeleccionado();
             
             
         } else if (cboBuscar.getSelectedIndex() == 1) {
@@ -421,6 +423,20 @@ public class Menu01 extends javax.swing.JFrame {
             
             
         }
+    }
+    
+    public void usuarioSeleccionado(){
+        if(tblUsuario.isFocusOwner()){
+            usuarioSeleccionado = (String) modelo.getValueAt(editadoFila, 0);
+        }
+        else{
+            JOptionPane.showMessageDialog(null, " seleccione una celda ");
+        }
+        /*
+        editadoFila = tblUsuario.getEditingRow();
+        editadoColumna =tblUsuario.getEditingColumn();
+        usuarioSeleccionado = (String) modelo.getValueAt(editadoFila, 0);
+        */
     }
 
     /**
@@ -583,7 +599,7 @@ public class Menu01 extends javax.swing.JFrame {
 
         jMenu1.setText("Ayuda");
 
-        jMenuItem1.setText("jMenuItem1");
+        jMenuItem1.setText("Ayuda");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -655,6 +671,7 @@ public class Menu01 extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
+        JOptionPane.showMessageDialog(null, "911");
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void mPermisoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mPermisoActionPerformed

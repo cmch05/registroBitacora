@@ -1,10 +1,8 @@
 package mundo;
 
-import interfaces.Menu01;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,20 +10,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  *
  * @author cmch05
  */
 public class MetodosMenu01 {
+    
     public MetodosMenu01(){
 }
         private ConectarDB conectar ;
@@ -37,7 +34,7 @@ public class MetodosMenu01 {
     private String parametroBusqueda;
     private DefaultTableModel  modelo;
     
-    private String usuarioSeleccionado;
+    private String usuarioSeleccionado, usuarioAModificar;
 
     public DefaultTableModel getModelo() {
         return modelo;
@@ -47,7 +44,7 @@ public class MetodosMenu01 {
         this.modelo = modelo;
     }
     private JTable tblUsuario;
-    private int editadoFila,EditadoColumna, serieSeleccionada;
+    private int editadoFila,editadoColumna, serieSeleccionada;
     //------------------------------------------
     ArrayList serie;
 
@@ -93,7 +90,7 @@ public class MetodosMenu01 {
         this.tblUsuario = tblUsuario;
         this.serie = serie;
         this.editadoFila= editadoFila;
-        this.EditadoColumna=EditadoColumna;
+        this.editadoColumna=EditadoColumna;
         this.serieSeleccionada= serieSeleccionada;
         this.usuarioSeleccionado=usuarioSeleccionado;
     }
@@ -118,9 +115,7 @@ public class MetodosMenu01 {
               registro[0]=rs.getString("login");
               registro[1]=rs.getString("fecha");
               registro[2]=rs.getString("nivel");
-              
               modelo.addRow(registro);
-
             }
             tblUsuario.setModel(modelo);
             //pst.executeUpdate(sSQL);
@@ -129,7 +124,7 @@ public class MetodosMenu01 {
             JOptionPane.showMessageDialog(null, "error " + ex);
             //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        usuarioSeleccionado = (String) modelo.getValueAt(editadoFila, 0);
+        // usuarioSeleccionado = (String) modelo.getValueAt(editadoFila, 0);
     }
     
     public void verBitacora(){
@@ -265,12 +260,7 @@ public class MetodosMenu01 {
                 
                     buscar();
                      if(c==KeyEvent.VK_BACK_SPACE){
-                   
-                   // MetodosMenu01  metodo =new MetodosMenu01(txtBuscar.getText(),modelo,tblUsuario);
-                   //tblUsuario.setModel(new DefaultTableModel());
-                  //  metodo.buscar();
                 }
-                
             }
         });
     }
@@ -280,20 +270,37 @@ public class MetodosMenu01 {
         modelo.addTableModelListener(new TableModelListener(){
              @Override
              public void tableChanged(TableModelEvent e){
-                 //poner metod que se quiere accinar al editar campo de la tabla
-                JOptionPane.showMessageDialog(null, "Editando");
+                
+                editadoFila = tblUsuario.getEditingRow();
+                editadoColumna =tblUsuario.getEditingColumn();
                
-              // actualizarUsuario();
-               // comboBuscar();
+                usuarioAModificar = (String) modelo.getValueAt(editadoFila, 0);
+            
+                usuarioAModificar = (String) modelo.getValueAt(editadoFila, 0);
+               JOptionPane.showMessageDialog(null, "seleccionado "+usuarioSeleccionado+" modificado a  "+ usuarioAModificar);
+               actualizarUsuario();
+               //buscar();
+               
              }
          });
     }
+   public void seleccionTabla(){
+       tblUsuario.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                editadoFila = tblUsuario.getSelectedRow();
+                editadoColumna =tblUsuario.getSelectedColumn();
+                usuarioSeleccionado = (String) modelo.getValueAt(editadoFila, 0);
+                //JOptionPane.showMessageDialog(null, "Click en " + usuarioSeleccionado );
+            }
+        });
+   }
    
    public void actualizarUsuario() {
         int editado = tblUsuario.getEditingRow();
         
         //String strs= tblUsuario.is
-         conectar = new ConectarDB();
+        conectar = new ConectarDB();
         con = conectar.coneccion();
         //String fechaLimite = txtFecha.getText();
         int estado = 0;
@@ -319,23 +326,22 @@ public class MetodosMenu01 {
             PreparedStatement pst = con.prepareStatement(sSQL);
             //ResultSet rs = pst.executeQuery(sSQL);
 
-            pst.setString(1, usuarioSeleccionado);
+            pst.setString(1, usuarioAModificar);
           //  pst.setString(2, DigestUtils.md5Hex(txtContraseña.getText()));
           //  pst.setInt(3, estado);
            // pst.setString(4, fechaLimite);
            // pst.setInt(5, nivel);
 
-            pst.executeUpdate();
+            pst.execute();
             //pst.ex
             //pst.executeUpdate(sSQL);
-            JOptionPane.showMessageDialog(null, "Usuario " + usuarioSeleccionado + " Actualizado");
+            //JOptionPane.showMessageDialog(null, "Usuario " + usuarioSeleccionado + " Actualizado");
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "error " + ex);
             //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
-    
-
+   
+   
 }
