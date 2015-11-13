@@ -40,9 +40,12 @@ public class Menu01 extends javax.swing.JFrame {
     private ResultSet rs;
     private String itemComboBox;
     private ArrayList niveles = new ArrayList();
-    private int editadoFila, editadoColumna ,serieSeleccionada;
+    private int editadoFila, editadoColumna ,serieSeleccionada, seleccionadoColumna,seleccionadoFila;
     String usuarioSeleccionado;   
 
+    
+   
+    
     public void setAccionCrearActualizar(String accionCrearActualizar) {
         this.accionCrearActualizar = accionCrearActualizar;
     }
@@ -55,6 +58,8 @@ public class Menu01 extends javax.swing.JFrame {
         cargarJMenuItem();
         seleccioNivel();
 
+        //MetodosMenu01 metodo = new MetodosMenu01();
+        //metodo.agregarAccionBuscar(txtBuscar);
         agregarAccionBuscar(txtBuscar);
         antesCerrar();
         desHabilitar();
@@ -73,6 +78,7 @@ public class Menu01 extends javax.swing.JFrame {
         setResizable(false);
         initComponents();
         seleccioNivel();
+        cboBuscar.setEditable(true);
         
     }
 
@@ -171,6 +177,7 @@ public class Menu01 extends javax.swing.JFrame {
                     //btnBitacora.setEnabled(true);
                     //btnBuscar.setEnabled(true);
                     cboBuscar.setEnabled(true);
+                    
 
                 } else if (m.getText().equals("crear usuario")) {
 
@@ -235,7 +242,6 @@ public class Menu01 extends javax.swing.JFrame {
         txtBuscar.setText("");
         txtContraseña.setText("");
         txtFecha.setText("");
-
         txtNombre.setText("");
 
         // tblUsuario.setModel(new DefaultTableModel());
@@ -251,7 +257,6 @@ public class Menu01 extends javax.swing.JFrame {
         String passEncriptado = DigestUtils.md5Hex(pass);
         int estado = 0;
         sSQL = "select curdate() <= '" + fechaLimite + "'";
-
         try {
             PreparedStatement pst = con.prepareStatement(sSQL);
             ResultSet rs = pst.executeQuery(sSQL);
@@ -259,11 +264,8 @@ public class Menu01 extends javax.swing.JFrame {
                 estado = rs.getInt(1);
             }
             JOptionPane.showMessageDialog(null, estado);
-
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "introduzca la fecha con formato yyyy,mmm,dd ");
-            //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-
         }
 
         sSQL = "insert into usuario(login, password, estado, fecha, nivel)"
@@ -284,12 +286,12 @@ public class Menu01 extends javax.swing.JFrame {
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "error " + ex);
-            //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     public void actualizarUsuario() {
+        celdaSeleccionada();
+        //MetodosMenu01 metodo =new MetodosMenu01();
         int editado = tblUsuario.getEditingRow();
         //String strs= tblUsuario.is
         ConectarDB conectar = new ConectarDB();
@@ -310,13 +312,13 @@ public class Menu01 extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "introduzca la fecha con formato yyyy,mmm,dd ");
         }
         sSQL = "update usuario set login=?,password=?, estado=?, fecha=?, nivel=?"
-                + " where login = 'usuario9' ";
+                + " where login = '"+usuarioSeleccionado+"' ";
         try {
             PreparedStatement pst = con.prepareStatement(sSQL);
             //ResultSet rs = pst.executeQuery(sSQL);
 
             pst.setString(1, txtNombre.getText());
-            pst.setString(2, DigestUtils.md5Hex(txtContraseña.getText()));
+            pst.setString(2, DigestUtils.md5Hex(txtContraseña.getPassword().toString()));
             pst.setInt(3, estado);
             pst.setString(4, fechaLimite);
             pst.setInt(5, nivel);
@@ -324,13 +326,11 @@ public class Menu01 extends javax.swing.JFrame {
             pst.executeUpdate();
             //pst.ex
             //pst.executeUpdate(sSQL);
-            JOptionPane.showMessageDialog(null, "Usuario " + txtNombre.getText() + " Actualizado");
+            JOptionPane.showMessageDialog(null, "Usuario " +usuarioSeleccionado  + " Actualizado a "+ txtNombre.getText());
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "error " + ex);
-            //Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     public void eliminarUsuario() {
@@ -338,7 +338,6 @@ public class Menu01 extends javax.swing.JFrame {
     }
 
     public void seleccioNivel() {
-        //JOptionPane.showMessageDialog(null, perfil);
         ConectarDB coneccion = new ConectarDB();
 
         con = coneccion.coneccion();
@@ -391,25 +390,18 @@ public class Menu01 extends javax.swing.JFrame {
         //int seleccionadoFila = tblUsuario.getSelectedRow();
         
         if (cboBuscar.getSelectedIndex() == 0) {
-            
-            
             MetodosMenu01 metodo = new MetodosMenu01(txtBuscar.getText(), modelo, tblUsuario, serie,editadoFila,
                                         editadoColumna, serieSeleccionada, usuarioSeleccionado);
             metodo.buscar();
             stringSeleccion = "buscar";
             modelo= metodo.getModelo();
-            
             // usuarioSeleccionado();
-             metodo.seleccionTabla();
-             metodo.enterTabla();
+             metodo.seleccionCelda();
+             metodo.enterCelda();
             // usuarioSeleccionado();
-            
-            
         } else if (cboBuscar.getSelectedIndex() == 1) {
-            
              //usuarioSeleccionado = (String) serie.get(editadoFila);
             //serieSeleccionada=Integer.parseInt(serie.get(editadoFila).toString());
-            
             MetodosMenu01 metodo = new MetodosMenu01(txtBuscar.getText(), modelo, tblUsuario, serie,editadoFila,
                                         editadoColumna, serieSeleccionada, usuarioSeleccionado);
             metodo.verBitacora();
@@ -418,13 +410,10 @@ public class Menu01 extends javax.swing.JFrame {
             metodo.verBitacora();
             serie = metodo.getSerie();
             modelo= metodo.getModelo();
-            metodo.enterTabla();
-
-            
-            
+            metodo.enterCelda();
         }
     }
-    
+    /*
     public void usuarioSeleccionado(){
         if(tblUsuario.isFocusOwner()){
             usuarioSeleccionado = (String) modelo.getValueAt(editadoFila, 0);
@@ -432,18 +421,38 @@ public class Menu01 extends javax.swing.JFrame {
         else{
             JOptionPane.showMessageDialog(null, " seleccione una celda ");
         }
-        /*
+        
+        //editadoFila = tblUsuario.getEditingRow();
+        //editadoColumna =tblUsuario.getEditingColumn();
+        //usuarioSeleccionado = (String) modelo.getValueAt(editadoFila, 0);
+        
+    }
+*/
+    public void celdaSeleccionada(){
         editadoFila = tblUsuario.getEditingRow();
         editadoColumna =tblUsuario.getEditingColumn();
-        usuarioSeleccionado = (String) modelo.getValueAt(editadoFila, 0);
-        */
-    }
+         seleccionadoColumna = tblUsuario.getSelectedColumn();
+        seleccionadoFila = tblUsuario.getSelectedRow();
+        
+        
+        //JOptionPane.showMessageDialog(null,cboBuscar.getSelectedIndex());
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+        if (cboBuscar.getSelectedIndex()==0) {
+           usuarioSeleccionado = (String) modelo.getValueAt(seleccionadoFila, 0);
+           
+          // JOptionPane.showMessageDialog(null, " " + seleccionadoFila + " " + seleccionadoColumna + " "+
+            //    usuarioSeleccionado);
+        } 
+        else if (cboBuscar.getSelectedIndex()==1) {
+            usuarioSeleccionado = (String) serie.get(editadoFila);
+            serieSeleccionada=Integer.parseInt(serie.get(editadoFila).toString());
+            
+            
+            //JOptionPane.showMessageDialog(null, " " + seleccionadoFila + " " + seleccionadoColumna + " "+
+            //    usuarioSeleccionado+" "+ serieSeleccionada);
+        }
+
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -486,6 +495,12 @@ public class Menu01 extends javax.swing.JFrame {
 
         jLabel1.setText("Nombre de Usuario");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
+
+        txtFecha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFechaActionPerformed(evt);
+            }
+        });
         getContentPane().add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 141, -1));
 
         jLabel2.setText("Fecha Expiracion Acceso ");
@@ -623,35 +638,7 @@ public class Menu01 extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalidaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        // TODO add your handling code here:
-       // borrar();
-         editadoFila = tblUsuario.getEditingRow();
-        editadoColumna =tblUsuario.getEditingColumn();
-        int seleccionadoColumna = tblUsuario.getSelectedColumn();
-        int seleccionadoFila = tblUsuario.getSelectedRow();
-        
-        
-        //JOptionPane.showMessageDialog(null,cboBuscar.getSelectedIndex());
-
-        if (cboBuscar.getSelectedIndex()==0) {
-           usuarioSeleccionado = (String) modelo.getValueAt(editadoFila, 0);
-           
-           JOptionPane.showMessageDialog(null, " " + seleccionadoFila + " " + seleccionadoColumna + " "+
-                usuarioSeleccionado);
-        } 
-        else if (cboBuscar.getSelectedIndex()==1) {
-            usuarioSeleccionado = (String) serie.get(editadoFila);
-            serieSeleccionada=Integer.parseInt(serie.get(editadoFila).toString());
-            
-            
-            JOptionPane.showMessageDialog(null, " " + seleccionadoFila + " " + seleccionadoColumna + " "+
-                usuarioSeleccionado+" "+ serieSeleccionada);
-        }
-
-        // 
-        
-
-        //ejecutarAccion();
+      celdaSeleccionada();
     }//GEN-LAST:event_btnBorrarActionPerformed
 
 
@@ -669,11 +656,6 @@ public class Menu01 extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnCrearActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-        JOptionPane.showMessageDialog(null, "911");
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
-
     private void mPermisoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mPermisoActionPerformed
         // TODO add your handling code here:
         //agregarAccionMenu(jMenuItem1);
@@ -686,6 +668,15 @@ public class Menu01 extends javax.swing.JFrame {
         txtBuscar.grabFocus();
         comboBuscar();
     }//GEN-LAST:event_cboBuscarActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(null, "911");
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void txtFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFechaActionPerformed
 
     /**
      * @param args the command line arguments
