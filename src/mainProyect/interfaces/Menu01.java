@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfaces;
+package mainProyect.interfaces;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,10 +18,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import mundo.ConectarDB;
+import mainProyect.mundo.ConectarDB;
 import javax.swing.JMenuItem;
 import javax.swing.JTextField;
-import mundo.MetodosMenu01;
+import mainProyect.mundo.GenerarReporte;
+import mainProyect.mundo.MetodosMenu01;
 import org.apache.commons.codec.digest.DigestUtils;// modulo common
 
 /**
@@ -51,6 +52,8 @@ public class Menu01 extends javax.swing.JFrame {
     }
 
     public Menu01(int perfil) {
+        
+        this.setLocation(480,100);
         this.setResizable(false);
         this.perfil = perfil;
         initComponents();
@@ -75,6 +78,7 @@ public class Menu01 extends javax.swing.JFrame {
     boolean suiche = false;
 
     public Menu01() {
+        this.setLocation(480,100);
         setResizable(false);
         initComponents();
         seleccioNivel();
@@ -108,7 +112,7 @@ public class Menu01 extends javax.swing.JFrame {
                 ser = rs.getInt("serial");
 
             }
-            JOptionPane.showMessageDialog(null, ser);
+           // JOptionPane.showMessageDialog(null, ser);
             sSQL = "update bitacora set fecha_salida = curdate() , hora_salida = curtime() "
                     + "where serial ='" + ser + "' ";
             //pst= con.prepareStatement(sSQL);
@@ -475,6 +479,7 @@ public class Menu01 extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         btnBorrar = new javax.swing.JButton();
         cboBuscar = new javax.swing.JComboBox<>();
+        btnGenerar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         mPermiso = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
@@ -604,6 +609,14 @@ public class Menu01 extends javax.swing.JFrame {
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 0, -1, 310));
 
+        btnGenerar.setText("Generar Reporte");
+        btnGenerar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnGenerar, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 520, -1, -1));
+
         mPermiso.setText("Permisos");
         mPermiso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -678,6 +691,12 @@ public class Menu01 extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFechaActionPerformed
 
+    private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
+        // TODO add your handling code here:
+        GenerarReporte generar = new GenerarReporte(tblUsuario);
+        generar.reporte();
+    }//GEN-LAST:event_btnGenerarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -717,6 +736,7 @@ public class Menu01 extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnCrear;
+    private javax.swing.JButton btnGenerar;
     private javax.swing.JButton btnSalida;
     private javax.swing.JComboBox<String> cboBuscar;
     private javax.swing.JComboBox<String> cboNivel;

@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mundo;
+package mainProyect.mundo;
 
-import interfaces.Login;
-import interfaces.Menu01;
+import mainProyect.interfaces.Login;
+import mainProyect.interfaces.Menu01;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;

@@ -1,4 +1,4 @@
-package mundo;
+package mainProyect.mundo;
 
 import java.awt.event.*;
 import java.sql.*;
@@ -150,10 +150,15 @@ public class MetodosMenu01 {
                 serie.add(rs.getString("serial"));
             }
             tblUsuario.setModel(modelo);
+            
+          //  GenerarReporte generar = new GenerarReporte(tblUsuario);
+            
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "error " + ex);
         }
     }
+
+    
     public void agregarAccionBuscar(JTextField a) {
         a.addKeyListener(new KeyAdapter() {
             @Override
@@ -167,27 +172,22 @@ public class MetodosMenu01 {
         });
     }
     public void enterCelda() {
-        modelo.addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-
-                editadoFila = tblUsuario.getEditingRow();
-                editadoColumna = tblUsuario.getEditingColumn();
-
-                usuarioAModificar = (String) modelo.getValueAt(editadoFila, 0);
-
-                //usuarioAModificar = (String) modelo.getValueAt(editadoFila, 0);
-                JOptionPane.showMessageDialog(null, "seleccionado " + usuarioSeleccionado + " modificado a  " + usuarioAModificar);
-                actualizarUsuario();
-                //buscar();
-
-            }
+        modelo.addTableModelListener((TableModelEvent e) -> {
+            editadoFila = tblUsuario.getEditingRow();
+            editadoColumna = tblUsuario.getEditingColumn();
+            
+            usuarioAModificar = (String) modelo.getValueAt(editadoFila, 0);
+            
+            //usuarioAModificar = (String) modelo.getValueAt(editadoFila, 0);
+            JOptionPane.showMessageDialog(null, "seleccionado " + usuarioSeleccionado + " modificado a  " + usuarioAModificar);
+            actualizarUsuario();
+            //buscar();
         });
     }
     public void seleccionCelda() {
         tblUsuario.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mouseClicked(MouseEvent evt) {
                 editadoFila = tblUsuario.getSelectedRow();
                 editadoColumna = tblUsuario.getSelectedColumn();
                 usuarioSeleccionado = (String) modelo.getValueAt(editadoFila, 0);
