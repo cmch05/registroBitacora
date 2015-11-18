@@ -15,23 +15,24 @@ import javax.swing.JOptionPane;
  *
  * @author cmch05
  */
-public class ConectarDB {
-    private String usr,pass,server;
+public class ConectarSql {
+    private String usr,pass,server,dataBase;
 
-    public ConectarDB(String usr, String pass, String server) {
+    public ConectarSql(String usr, String pass, String server,String dataBase) {
         this.usr = usr;
         this.pass = pass;
         this.server = server;
+        this.dataBase=dataBase;
     }
     //instanciamos Connection
     Connection con=null;
     //un metodo tipo Connection
     
-     public Connection conectar(){
+     public Connection coneccion(){
         try{
             Class.forName("com.mysql.jdbc.Driver");
             //direccion base de datos, usurario, contraseña del usuario
-            con=DriverManager.getConnection("jdbc:mysql://"+server+"/login",usr,pass);
+            con=DriverManager.getConnection("jdbc:mysql://"+server+"/"+dataBase,usr,pass);
             
            // JOptionPane.showMessageDialog(null, "coneccion establecida");
         }

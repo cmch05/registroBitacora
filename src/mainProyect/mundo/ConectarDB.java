@@ -16,19 +16,17 @@ import javax.swing.JOptionPane;
  * @author cmch05
  */
 public class ConectarDB {
-    private String usr,pass,server;
+    //private String usr,pass,server;
 
-    public ConectarDB(String usr, String pass, String server) {
-        this.usr = usr;
-        this.pass = pass;
-        this.server = server;
-    }
+   
     public ConectarDB(){
         
     }
     
     //instanciamos Connection
     Connection con=null;
+
+   
     //un metodo tipo Connection
     public Connection coneccion(){
         try{
@@ -44,7 +42,7 @@ public class ConectarDB {
         }
         return con;
     }
-    
+    /*
      public Connection conectar(){
         try{
             Class.forName("com.mysql.jdbc.Driver");
@@ -59,5 +57,5 @@ public class ConectarDB {
         }
         return con;
     }
-    
+    */
 }

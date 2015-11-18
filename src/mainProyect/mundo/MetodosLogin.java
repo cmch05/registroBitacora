@@ -10,6 +10,8 @@ import mainProyect.interfaces.Menu01;
 import java.awt.event.*;
 import java.sql.*;
 import javax.swing.*;
+import mainProyect.ConectarSql;
+import mainProyect.ConsultaSql;
 
 
 /**
@@ -23,10 +25,11 @@ public class MetodosLogin {
     private  String pass, usr,sSQL;
     private PreparedStatement pst;
     private Connection con;
-    private final ConectarDB conectar = new ConectarDB();
+    private final ConectarSql conectar = new ConectarSql("root","","localhost","login");
     private int perfil;
     private static int errores;
     private ResultSet rs;
+    //private ConsultaSql consulta =new ConsultaSql(conectar.coneccion(),sSQL);
 
     
     
@@ -69,11 +72,13 @@ public class MetodosLogin {
                 + " where login = '"+usr+"' and fecha >= curdate() and "
                 + "password= md5('"+pass+"') and estado = true";
         // JOptionPane.showMessageDialog(null, sSQL);
-        con = conectar.coneccion();
+        
         
         try {
-            pst= con.prepareStatement(sSQL);
-            rs= pst.executeQuery(sSQL);
+            ConsultaSql consulta =new ConsultaSql(conectar.coneccion(),sSQL);
+            rs= consulta.getResultSet();
+            //pst= con.prepareStatement(sSQL);
+            //rs= pst.executeQuery(sSQL);
             while (rs.next()) {
                 usr2=rs.getString("login");
                 pass2= rs.getString("password");
@@ -81,7 +86,7 @@ public class MetodosLogin {
                 perfil=rs.getInt("nivel");
             }
            
-            pst.execute();
+           // pst.execute();
              
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, " error "+ex);
@@ -131,6 +136,8 @@ public class MetodosLogin {
             //like
             
             try {
+                // JOptionPane.showMessageDialog(null, "veeeeeer ");
+              con = conectar.coneccion();  
              pst= con.prepareStatement(sSQL);
             pst.execute();
             } 

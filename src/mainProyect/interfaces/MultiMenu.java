@@ -6,22 +6,27 @@
 package mainProyect.interfaces;
 
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.plaf.ComboBoxUI;
 import javax.swing.table.DefaultTableModel;
-import mainProyect.mundo.ConectarDB;
+import mainProyect.ConectarSql;
+//import mainProyect.mundo.ConectarSql;
 import mainProyect.mundo.Metodos;
 import mainProyect.mundo.MetodosMenu01;
+/*
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
-
+*/
 /**
  *
  * @author cmch05
@@ -33,11 +38,11 @@ public class MultiMenu extends javax.swing.JFrame {
      */
     public MultiMenu() {
         initComponents();
-        editarTabla();
+        //editarTabla();
         cboSeleccion.setEditable(true);
         
     }
-    ConectarDB coneccion= new ConectarDB();
+    //ConectarDB coneccion= new ConectarSql();
     private JTable tabla;
     private String valor;
     private boolean esSeleccionada;
@@ -224,14 +229,22 @@ public class MultiMenu extends javax.swing.JFrame {
 
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
         // TODO add your handling code here:
-        try{
-        JasperReport reporte= JasperCompileManager.compileReport("mundo/reporte");
-        //JasperPrint imprimir = JasperFillManager.fillReport(reporte, this.coneccion);
-        //JasperViewer.viewReport(imprimir);
-        }
-        catch(JRException e){
+        
+        /*
+        ConectarSql conectar = new ConectarSql("root", "", "localhost","login");
+        String path="reporte1.jasper";
+        JasperReport jr = null;
+        try {
+            jr =(JasperReport) JRLoader.loadObjectFromFile(path);//loadObjectFromFile(path);
+            JasperPrint jp= JasperFillManager.fillReport(jr, null,conectar.conectar());
+            JasperViewer jv = new JasperViewer(jp);
+            jv.setVisible(true);
+            jv.setTitle(path);
             
+        } catch (JRException ex) {
+            Logger.getLogger(MultiMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
+        */
     }//GEN-LAST:event_btnReporteActionPerformed
     
     

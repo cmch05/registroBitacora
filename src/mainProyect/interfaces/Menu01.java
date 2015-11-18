@@ -21,7 +21,6 @@ import javax.swing.table.DefaultTableModel;
 import mainProyect.mundo.ConectarDB;
 import javax.swing.JMenuItem;
 import javax.swing.JTextField;
-import mainProyect.mundo.GenerarReporte;
 import mainProyect.mundo.MetodosMenu01;
 import org.apache.commons.codec.digest.DigestUtils;// modulo common
 
@@ -103,21 +102,25 @@ public class Menu01 extends javax.swing.JFrame {
         ConectarDB conectar = new ConectarDB();
         con = conectar.coneccion();
         int ser = 0;
-        String sSQL = "select serial from bitacora "
-                + "order by serial desc limit 1 ";
+        String sSQL = "";
+              //  sSQL="select serial from bitacora "
+              // + "order by serial desc limit 1 ";
+            
         try {
-            PreparedStatement pst = con.prepareStatement(sSQL);
-            ResultSet rs = pst.executeQuery(sSQL);
-            while (rs.next()) {
-                ser = rs.getInt("serial");
+            
+           
+         //  while (rs.next()) {
+            //    ser = rs.getInt("serial");
 
-            }
+            
            // JOptionPane.showMessageDialog(null, ser);
-            sSQL = "update bitacora set fecha_salida = curdate() , hora_salida = curtime() "
-                    + "where serial ='" + ser + "' ";
+            sSQL = "update bitacora set fecha_salida = curdate() , hora_salida = curtime() order by serial desc limit 1 ";
+             //       + "where serial ='" + ser + "' ";
             //pst= con.prepareStatement(sSQL);
+           PreparedStatement pst = con.prepareStatement(sSQL);
+          // ResultSet rs = pst.executeQuery(sSQL);
             pst.executeUpdate(sSQL);
-
+            
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "error " + ex);
         }
@@ -317,12 +320,22 @@ public class Menu01 extends javax.swing.JFrame {
         }
         sSQL = "update usuario set login=?,password=?, estado=?, fecha=?, nivel=?"
                 + " where login = '"+usuarioSeleccionado+"' ";
+        
+        
+        //************************************
+        ArrayList lista = new ArrayList();
+        lista.add(txtNombre.getText());
+        lista.add(DigestUtils.md5Hex(txtContraseña.getText()));
+        lista.add(estado);
+        lista.add(fechaLimite);
+        lista.add(nivel);
+        //************************************
         try {
             PreparedStatement pst = con.prepareStatement(sSQL);
             //ResultSet rs = pst.executeQuery(sSQL);
 
             pst.setString(1, txtNombre.getText());
-            pst.setString(2, DigestUtils.md5Hex(txtContraseña.getPassword().toString()));
+            pst.setString(2, DigestUtils.md5Hex(txtContraseña.getText()));
             pst.setInt(3, estado);
             pst.setString(4, fechaLimite);
             pst.setInt(5, nivel);
@@ -479,7 +492,6 @@ public class Menu01 extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         btnBorrar = new javax.swing.JButton();
         cboBuscar = new javax.swing.JComboBox<>();
-        btnGenerar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         mPermiso = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
@@ -609,14 +621,6 @@ public class Menu01 extends javax.swing.JFrame {
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 0, -1, 310));
 
-        btnGenerar.setText("Generar Reporte");
-        btnGenerar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGenerarActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnGenerar, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 520, -1, -1));
-
         mPermiso.setText("Permisos");
         mPermiso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -691,12 +695,6 @@ public class Menu01 extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFechaActionPerformed
 
-    private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
-        // TODO add your handling code here:
-        GenerarReporte generar = new GenerarReporte(tblUsuario);
-        generar.reporte();
-    }//GEN-LAST:event_btnGenerarActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -736,7 +734,6 @@ public class Menu01 extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnCrear;
-    private javax.swing.JButton btnGenerar;
     private javax.swing.JButton btnSalida;
     private javax.swing.JComboBox<String> cboBuscar;
     private javax.swing.JComboBox<String> cboNivel;
