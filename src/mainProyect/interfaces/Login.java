@@ -117,15 +117,24 @@ public class Login extends javax.swing.JFrame {
             }
         });
     }
+    //boolean b=false;
     public void llamada(){
         
         String pass= txtContraseña.getText();
         String usr = txtUsuario.getText();
         MetodosLogin metodo=new MetodosLogin( pass, usr);
-        metodo.registroEntrada();
-        Menu01 menu01=new Menu01();
-        //Login login = new Login();
        
+        metodo.registroEntrada();
+        
+        
+       // this.dispose();
+        
+       // Menu01 menu01=new Menu01();
+        if(metodo.isB()){
+            //System.exit(0);
+            this.dispose();
+        }
+        
     }
     /**
      * @param args the command line arguments

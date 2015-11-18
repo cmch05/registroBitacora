@@ -5,13 +5,13 @@
  */
 package mainProyect.mundo;
 
-import mainProyect.interfaces.Login;
-import mainProyect.interfaces.Menu01;
+import mainProyect.interfaces.*;
+
 import java.awt.event.*;
 import java.sql.*;
 import javax.swing.*;
-import mainProyect.ConectarSql;
-import mainProyect.ConsultaSql;
+import mainProyect.*;
+
 
 
 /**
@@ -30,9 +30,16 @@ public class MetodosLogin {
     private static int errores;
     private ResultSet rs;
     //private ConsultaSql consulta =new ConsultaSql(conectar.coneccion(),sSQL);
+    private boolean b=false;
 
-    
-    
+    public boolean isB() {
+        return b;
+    }
+
+    public void setB(boolean b) {
+        this.b = b;
+    }
+
     public MetodosLogin() {
         
     }
@@ -60,8 +67,6 @@ public class MetodosLogin {
         });
     }
     
-     
-     
      
     public void registroEntrada(){
        
@@ -95,15 +100,18 @@ public class MetodosLogin {
         
         if (usr.equals(usr2)&& estado==true){ //&&(fecha==fechaActual ||fecha.after(fechaActual))){
             if(perfil==1){
+                b=true;
                 JOptionPane.showMessageDialog(null, "Bienvenido Administrador");
                 cambioInterfaz(perfil,usr);
                 
             }
             else if(perfil==2){
+                b=true;
                 JOptionPane.showMessageDialog(null, "Bienvenido Visitante");
                 cambioInterfaz(perfil,usr);
             }
             else if(perfil==3){
+                b=true;
                 JOptionPane.showMessageDialog(null, "Bienvenido Editor");
                 cambioInterfaz(perfil,usr);
             }
@@ -125,10 +133,11 @@ public class MetodosLogin {
     }
     public void cambioInterfaz(int per, String usr){
         Menu01 menu01=new Menu01(per);
-        Login login = new Login();
-        
         menu01.setVisible(true);
-        login.dispose();
+       // Login login = new Login();
+        //b=true;
+        
+        //login.dispose();
         
             sSQL="insert into bitacora(login,fecha_ingreso,hora_ingreso)"
                     + "values('"+usr+"',curdate(),curtime())";

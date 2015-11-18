@@ -51,6 +51,8 @@ public class Menu01 extends javax.swing.JFrame {
     }
 
     public Menu01(int perfil) {
+        Login login = new Login();
+        login.setVisible(false);
         
         this.setLocation(480,100);
         this.setResizable(false);
@@ -78,7 +80,7 @@ public class Menu01 extends javax.swing.JFrame {
 
     public Menu01() {
         this.setLocation(480,100);
-        setResizable(false);
+        //setResizable(false);
         initComponents();
         seleccioNivel();
         cboBuscar.setEditable(true);
@@ -260,7 +262,7 @@ public class Menu01 extends javax.swing.JFrame {
         con = conectar.coneccion();
         String fechaLimite = txtFecha.getText();
 
-        String pass = txtContraseña.getPassword().toString();
+        String pass = txtContraseña.getText();
         String passEncriptado = DigestUtils.md5Hex(pass);
         int estado = 0;
         sSQL = "select curdate() <= '" + fechaLimite + "'";
@@ -282,7 +284,7 @@ public class Menu01 extends javax.swing.JFrame {
             //ResultSet rs = pst.executeQuery(sSQL);
 
             pst.setString(1, txtNombre.getText());
-            pst.setString(2, passEncriptado);
+            pst.setString(2, pass);
             pst.setInt(3, estado);
             pst.setString(4, fechaLimite);
             pst.setInt(5, nivel);
