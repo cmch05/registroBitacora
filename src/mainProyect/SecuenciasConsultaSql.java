@@ -20,7 +20,7 @@ public class SecuenciasConsultaSql {
     private String sql;
     
     
-    public String buscarLibro(){
+    public String buscarUsuario(){
     sql = "select codigo, nombre, apellido,cedula,domicilio, ciudad,"
             + "departamento,nacimiento from usuario"
                 + " where concat(nombre,' ', apellido,' ',cedula,' ',domicilio,"
@@ -28,9 +28,23 @@ public class SecuenciasConsultaSql {
                 + " like '%" + parametro + "%'";
     return sql;
     }
-    public String[] tituloBuscarLibro(){
+    public String[] tituloBuscarUsuario(){
         String titulo[]={"Codigo","Nombre","Apellido","Cedula","Direccion","Ciudad",
             "Departamento","Fecha de Nacimiento"};
+        return titulo;
+    }
+    //********************************************
+    public String buscarLibro(){
+    sql = "select codigo, nombre, editorial,autor,genero, pais_autor,"
+            + "paginas,anno_edicion,precio from libro"
+                + " where concat(codigo,' ',nombre,' ', editorial,' ',autor,' ',genero,"
+            + "' ', pais_autor,' ', paginas,' ', anno_edicion,' ',precio)"
+                + " like '%" + parametro + "%'";
+    return sql;
+    }
+    public String[] tituloBuscarlibro(){
+        String titulo[]={"Codigo","Nombre","Editorial","Autor","Genero","Pais del Autor",
+            "Paginas","Fecha de Edicion","Precio"};
         return titulo;
     }
 }

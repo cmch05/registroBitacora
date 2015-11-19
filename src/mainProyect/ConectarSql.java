@@ -6,9 +6,12 @@
 package mainProyect;
 
 import java.awt.HeadlessException;
+import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -31,8 +34,10 @@ public class ConectarSql {
             Class.forName("com.mysql.jdbc.Driver");
             con=DriverManager.getConnection("jdbc:mysql://"+server+"/"+dataBase,usr,pass);
         }
-        catch(ClassNotFoundException | SQLException | HeadlessException e){
-           // JOptionPane.showMessageDialog(null, "Error: "+e);
+        
+        catch(ClassNotFoundException | SQLException | HeadlessException ex){
+            JOptionPane.showMessageDialog(null, "No se puede establecer coneccion con el servidor");
+            Logger.getLogger(ConectarSql.class.getName()).log(Level.SEVERE, null, ex);
         }
         return con;
     }

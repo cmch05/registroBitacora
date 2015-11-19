@@ -7,6 +7,8 @@ package mainProyect;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -30,15 +32,15 @@ public class ModeloTabla {
     public ModeloTabla(){
     }
     
-    public ModeloTabla(int largo, String sql, String[] titulo, Connection coneccion) {
-        this.largo = largo;
+    public ModeloTabla(String sql, String[] titulo, Connection coneccion) {
+        //this.largo = largo;
         this.sql = sql;
         this.titulo = titulo;
         this.coneccion=coneccion;
     }
 
     public  DefaultTableModel getModel(){
-        String[] registro = new String[largo];
+        String[] registro = new String[titulo.length];
         modelo = new DefaultTableModel(null, titulo);
         try {
             consulta= new ConsultaSql(coneccion, sql);
@@ -51,6 +53,7 @@ public class ModeloTabla {
                 modelo.addRow(registro);
             }
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error: " +e);
         }
          
        return modelo;

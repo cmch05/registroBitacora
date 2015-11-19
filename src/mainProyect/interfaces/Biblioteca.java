@@ -481,7 +481,16 @@ public class Biblioteca extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarSusActionPerformed
 
     private void btnBuscarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarLibroActionPerformed
+        conectar= new ConectarSql("root", "", "localhost", "biblioteca");
+        sql= new SecuenciasConsultaSql(txtBuscarLibro.getText());
+        String ssql= sql.buscarLibro();
+        String titulo[] =sql.tituloBuscarlibro();
+        
+        modelo= new ModeloTabla(ssql, titulo, conectar.coneccion());
+        tblLibro.setModel(modelo.getModel());
+        //DefaultTableModel getModel= new DefaultTableModel(null, titulo);
        
+        
         
         
     }//GEN-LAST:event_btnBuscarLibroActionPerformed
@@ -495,12 +504,12 @@ public class Biblioteca extends javax.swing.JFrame {
     private void btnBuscarSuscriptorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarSuscriptorActionPerformed
         conectar= new ConectarSql("root", "", "localhost", "biblioteca");
         sql= new SecuenciasConsultaSql(txtBuscarSuscriptor.getText());
-        String ssql= sql.buscarLibro();
-        String titulo[]=sql.tituloBuscarLibro();
+        String ssql= sql.buscarUsuario();
+        String titulo[] =sql.tituloBuscarUsuario();
         
         if(cboSuscriptor.getSelectedIndex()==0){
         
-        modelo= new ModeloTabla(8, ssql, titulo, conectar.coneccion());
+        modelo= new ModeloTabla(ssql, titulo, conectar.coneccion());
         tblLibro.setModel(modelo.getModel());
         //DefaultTableModel getModel= new DefaultTableModel(null, titulo);
         }
