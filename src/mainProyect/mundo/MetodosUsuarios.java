@@ -11,9 +11,9 @@ import javax.swing.table.*;
  *
  * @author cmch05
  */
-public class MetodosMenu01 {
+public class MetodosUsuarios {
 
-    public MetodosMenu01() {
+    public MetodosUsuarios() {
     }
     private ConectarDB conectar;
     private Connection con;
@@ -63,11 +63,11 @@ public class MetodosMenu01 {
     private String accionCrearActualizar;
     //---------------------------------
     //constructor para agregarAccionBuscar
-    public MetodosMenu01(JTextField txtBuscar) {
+    public MetodosUsuarios(JTextField txtBuscar) {
         this.txtBuscar = txtBuscar;
     }
     //constructor para agregarAccionMenu
-    public MetodosMenu01(JTextField txtNombre, JTextField txtFecha, JTextField txtContraseña,
+    public MetodosUsuarios(JTextField txtNombre, JTextField txtFecha, JTextField txtContraseña,
             JTextField txtNivel, JTextField txtBuscar, JButton btnBuscar, JButton btnBitacora, JButton btnCrear) {
         this.txtNombre = txtNombre;
         this.txtFecha = txtFecha;
@@ -80,13 +80,13 @@ public class MetodosMenu01 {
     }
 
     //contructor para cargarJMenuItem
-    public MetodosMenu01(int perfil, JMenu mPermiso) {
+    public MetodosUsuarios(int perfil, JMenu mPermiso) {
         this.perfil = perfil;
         this.mPermiso = mPermiso;
     }
 
     //contructor para verBitacora
-    public MetodosMenu01(String parametroBusqueda, DefaultTableModel modelo, JTable tblUsuario,
+    public MetodosUsuarios(String parametroBusqueda, DefaultTableModel modelo, JTable tblUsuario,
             ArrayList serie, int editadoFila, int EditadoColumna, int serieSeleccionada, String usuarioSeleccionado) {
         this.parametroBusqueda = parametroBusqueda;
         this.modelo = modelo;

@@ -17,28 +17,22 @@ import javax.swing.JOptionPane;
  */
 public class ConectarSql {
     private String usr,pass,server,dataBase;
-
+    private Connection con=null;
+    
     public ConectarSql(String usr, String pass, String server,String dataBase) {
         this.usr = usr;
         this.pass = pass;
         this.server = server;
         this.dataBase=dataBase;
     }
-    //instanciamos Connection
-    Connection con=null;
-    //un metodo tipo Connection
     
      public Connection coneccion(){
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            //direccion base de datos, usurario, contraseña del usuario
             con=DriverManager.getConnection("jdbc:mysql://"+server+"/"+dataBase,usr,pass);
-            
-           // JOptionPane.showMessageDialog(null, "coneccion establecida");
         }
-        //try catch validacion de errores
         catch(ClassNotFoundException | SQLException | HeadlessException e){
-            JOptionPane.showMessageDialog(null, "Error: "+e);
+           // JOptionPane.showMessageDialog(null, "Error: "+e);
         }
         return con;
     }

@@ -21,14 +21,14 @@ import javax.swing.table.DefaultTableModel;
 import mainProyect.mundo.ConectarDB;
 import javax.swing.JMenuItem;
 import javax.swing.JTextField;
-import mainProyect.mundo.MetodosMenu01;
+import mainProyect.mundo.MetodosUsuarios;
 import org.apache.commons.codec.digest.DigestUtils;// modulo common
 
 /**
  *
  * @author cmch05
  */
-public class Menu01 extends javax.swing.JFrame {
+public class Usuarios extends javax.swing.JFrame {
 
     private int perfil, nivel;
     private DefaultTableModel modelo;
@@ -50,7 +50,7 @@ public class Menu01 extends javax.swing.JFrame {
         this.accionCrearActualizar = accionCrearActualizar;
     }
 
-    public Menu01(int perfil) {
+    public Usuarios(int perfil) {
         Login login = new Login();
         login.setVisible(false);
         
@@ -62,7 +62,7 @@ public class Menu01 extends javax.swing.JFrame {
         cargarJMenuItem();
         seleccioNivel();
 
-        //MetodosMenu01 metodo = new MetodosMenu01();
+        //MetodosMenu01 metodo = new MetodosUsuarios();
         //metodo.agregarAccionBuscar(txtBuscar);
         agregarAccionBuscar(txtBuscar);
         antesCerrar();
@@ -78,7 +78,7 @@ public class Menu01 extends javax.swing.JFrame {
     }
     boolean suiche = false;
 
-    public Menu01() {
+    public Usuarios() {
         this.setLocation(480,100);
         //setResizable(false);
         initComponents();
@@ -89,7 +89,7 @@ public class Menu01 extends javax.swing.JFrame {
 
     // previene la aslida y despues escucha el boton de salida y le dice que haga algo
     public void antesCerrar() {
-        setDefaultCloseOperation(Menu01.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(Usuarios.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 registarSalida();
@@ -104,18 +104,8 @@ public class Menu01 extends javax.swing.JFrame {
         ConectarDB conectar = new ConectarDB();
         con = conectar.coneccion();
         int ser = 0;
-        String sSQL = "";
-              //  sSQL="select serial from bitacora "
-              // + "order by serial desc limit 1 ";
-            
+         sSQL = "";
         try {
-            
-           
-         //  while (rs.next()) {
-            //    ser = rs.getInt("serial");
-
-            
-           // JOptionPane.showMessageDialog(null, ser);
             sSQL = "update bitacora set fecha_salida = curdate() , hora_salida = curtime() order by serial desc limit 1 ";
              //       + "where serial ='" + ser + "' ";
             //pst= con.prepareStatement(sSQL);
@@ -143,10 +133,10 @@ public class Menu01 extends javax.swing.JFrame {
         String contador = "";
         con = coneccion.coneccion();
 
-        sSQL = "select distinct permiso from perfil_permiso left join permiso on "
-                + "perfil_permiso.id_perfil='" + perfil + "'and  perfil_permiso.id_permiso=permiso.id";
+        sSQL = "select permiso from permiso join perfil_permiso on "
+                + " permiso.id=perfil_permiso.id_permiso where "
+                + "perfil_permiso.id_perfil='"+perfil+"'";
 
-        //select permiso from perfil_permiso left join permiso on perfil_permiso.id_perfil='2'and  perfil_permiso.id_permiso=permiso.id;
         try {
             PreparedStatement pst = con.prepareStatement(sSQL);
             ResultSet rs = pst.executeQuery(sSQL);
@@ -200,7 +190,7 @@ public class Menu01 extends javax.swing.JFrame {
                     //btnBuscar.setEnabled(true);
                     cboBuscar.setEnabled(true);
                     accionCrearActualizar = "crear";
-                    jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Crear Usuario"));
+                    pn1.setBorder(javax.swing.BorderFactory.createTitledBorder("Crear Usuario"));
 
                 } else if (m.getText().equals("actualizar usuario")) {
 
@@ -214,7 +204,7 @@ public class Menu01 extends javax.swing.JFrame {
                     //btnBuscar.setEnabled(true);
                     cboBuscar.setEnabled(true);
                     accionCrearActualizar = "actualizar";
-                    jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Actualizar Usuario"));
+                    pn1.setBorder(javax.swing.BorderFactory.createTitledBorder("Actualizar Usuario"));
                 }
             }
         });
@@ -300,7 +290,7 @@ public class Menu01 extends javax.swing.JFrame {
 
     public void actualizarUsuario() {
         celdaSeleccionada();
-        //MetodosMenu01 metodo =new MetodosMenu01();
+        //MetodosMenu01 metodo =new MetodosUsuarios();
         int editado = tblUsuario.getEditingRow();
         //String strs= tblUsuario.is
         ConectarDB conectar = new ConectarDB();
@@ -409,7 +399,7 @@ public class Menu01 extends javax.swing.JFrame {
         //int seleccionadoFila = tblUsuario.getSelectedRow();
         
         if (cboBuscar.getSelectedIndex() == 0) {
-            MetodosMenu01 metodo = new MetodosMenu01(txtBuscar.getText(), modelo, tblUsuario, serie,editadoFila,
+            MetodosUsuarios metodo = new MetodosUsuarios(txtBuscar.getText(), modelo, tblUsuario, serie,editadoFila,
                                         editadoColumna, serieSeleccionada, usuarioSeleccionado);
             metodo.buscar();
             stringSeleccion = "buscar";
@@ -421,7 +411,7 @@ public class Menu01 extends javax.swing.JFrame {
         } else if (cboBuscar.getSelectedIndex() == 1) {
              //usuarioSeleccionado = (String) serie.get(editadoFila);
             //serieSeleccionada=Integer.parseInt(serie.get(editadoFila).toString());
-            MetodosMenu01 metodo = new MetodosMenu01(txtBuscar.getText(), modelo, tblUsuario, serie,editadoFila,
+            MetodosUsuarios metodo = new MetodosUsuarios(txtBuscar.getText(), modelo, tblUsuario, serie,editadoFila,
                                         editadoColumna, serieSeleccionada, usuarioSeleccionado);
             metodo.verBitacora();
             //verBitacora();
@@ -476,20 +466,21 @@ public class Menu01 extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnSalida = new javax.swing.JButton();
-        txtNombre = new javax.swing.JTextField();
-        txtContraseña = new javax.swing.JPasswordField();
-        jLabel1 = new javax.swing.JLabel();
-        txtFecha = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        btnCrear = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
+        pnMain = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblUsuario = new javax.swing.JTable();
-        jPanel1 = new javax.swing.JPanel();
+        btnSalida = new javax.swing.JButton();
+        pn1 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtContraseña = new javax.swing.JPasswordField();
+        txtNombre = new javax.swing.JTextField();
+        txtFecha = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         cboNivel = new javax.swing.JComboBox<>();
-        jPanel2 = new javax.swing.JPanel();
+        btnCrear = new javax.swing.JButton();
+        pn2 = new javax.swing.JPanel();
         txtBuscar = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         btnBorrar = new javax.swing.JButton();
@@ -500,44 +491,6 @@ public class Menu01 extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        btnSalida.setText("CerrarSesión");
-        btnSalida.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalidaActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 520, -1, -1));
-        getContentPane().add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 141, -1));
-        getContentPane().add(txtContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 141, -1));
-
-        jLabel1.setText("Nombre de Usuario");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
-
-        txtFecha.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFechaActionPerformed(evt);
-            }
-        });
-        getContentPane().add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 141, -1));
-
-        jLabel2.setText("Fecha Expiracion Acceso ");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
-
-        jLabel3.setText("Contraseña");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, -1, -1));
-
-        btnCrear.setText("Crear /Actualizar");
-        btnCrear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCrearActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnCrear, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 273, -1, 20));
-
-        jLabel4.setText("Nivel de Acceso");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, -1, -1));
 
         tblUsuario.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -552,31 +505,84 @@ public class Menu01 extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tblUsuario);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 313, 420, 201));
+        btnSalida.setText("CerrarSesión");
+        btnSalida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalidaActionPerformed(evt);
+            }
+        });
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Creción"));
-        jPanel1.setToolTipText("");
+        pn1.setBorder(javax.swing.BorderFactory.createTitledBorder("Creción"));
+        pn1.setToolTipText("");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(cboNivel, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 65, Short.MAX_VALUE))
+        jLabel3.setText("Contraseña");
+
+        jLabel4.setText("Nivel de Acceso");
+
+        txtFecha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFechaActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Nombre de Usuario");
+
+        jLabel2.setText("Fecha Expiracion Acceso ");
+
+        btnCrear.setText("Crear /Actualizar");
+        btnCrear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pn1Layout = new javax.swing.GroupLayout(pn1);
+        pn1.setLayout(pn1Layout);
+        pn1Layout.setHorizontalGroup(
+            pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pn1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboNivel, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel1))
+                .addContainerGap(48, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCrear)
+                .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(216, Short.MAX_VALUE)
+        pn1Layout.setVerticalGroup(
+            pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn1Layout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cboNivel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(51, 51, 51))
+                .addGap(39, 39, 39)
+                .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 190, 310));
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Busquedas"));
-        jPanel2.setToolTipText("");
+        pn2.setBorder(javax.swing.BorderFactory.createTitledBorder("Busquedas"));
+        pn2.setToolTipText("");
 
         jLabel5.setText("Parametros de busqueda");
 
@@ -594,34 +600,68 @@ public class Menu01 extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(48, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBorrar, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cboBuscar, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        javax.swing.GroupLayout pn2Layout = new javax.swing.GroupLayout(pn2);
+        pn2.setLayout(pn2Layout);
+        pn2Layout.setHorizontalGroup(
+            pn2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pn2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pn2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pn2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnBorrar))
+                    .addGroup(pn2Layout.createSequentialGroup()
+                        .addGroup(pn2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 46, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(cboBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        pn2Layout.setVerticalGroup(
+            pn2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn2Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel5)
-                .addGap(6, 6, 6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 156, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(cboBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 183, Short.MAX_VALUE)
                 .addComponent(btnBorrar)
-                .addGap(31, 31, 31))
+                .addContainerGap())
         );
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 0, -1, 310));
+        javax.swing.GroupLayout pnMainLayout = new javax.swing.GroupLayout(pnMain);
+        pnMain.setLayout(pnMainLayout);
+        pnMainLayout.setHorizontalGroup(
+            pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnMainLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnMainLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnSalida))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnMainLayout.createSequentialGroup()
+                        .addComponent(pn1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(pn2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        pnMainLayout.setVerticalGroup(
+            pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnMainLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pn1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pn2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSalida)
+                .addContainerGap())
+        );
 
         mPermiso.setText("Permisos");
         mPermiso.addActionListener(new java.awt.event.ActionListener() {
@@ -644,6 +684,17 @@ public class Menu01 extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -682,7 +733,7 @@ public class Menu01 extends javax.swing.JFrame {
 
     private void cboBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboBuscarActionPerformed
         // TODO add your handling code here:
-        MetodosMenu01 metodo= new MetodosMenu01();
+        MetodosUsuarios metodo= new MetodosUsuarios();
         txtBuscar.setText("");
         txtBuscar.grabFocus();
         comboBuscar();
@@ -714,21 +765,23 @@ public class Menu01 extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Menu01.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Usuarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Menu01.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Usuarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Menu01.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Usuarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Menu01.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Usuarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Menu01().setVisible(true);
+                new Usuarios().setVisible(true);
             }
         });
     }
@@ -747,10 +800,11 @@ public class Menu01 extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenu mPermiso;
+    private javax.swing.JPanel pn1;
+    private javax.swing.JPanel pn2;
+    private javax.swing.JPanel pnMain;
     private javax.swing.JTable tblUsuario;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JPasswordField txtContraseña;

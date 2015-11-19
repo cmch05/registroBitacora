@@ -17,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import mainProyect.ConectarSql;
 //import mainProyect.mundo.ConectarSql;
 import mainProyect.mundo.Metodos;
-import mainProyect.mundo.MetodosMenu01;
+import mainProyect.mundo.MetodosUsuarios;
 /*
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;

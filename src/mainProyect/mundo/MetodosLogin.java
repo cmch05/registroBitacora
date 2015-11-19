@@ -132,7 +132,7 @@ public class MetodosLogin {
         
     }
     public void cambioInterfaz(int per, String usr){
-        Menu01 menu01=new Menu01(per);
+        Usuarios menu01=new Usuarios(per);
         menu01.setVisible(true);
        // Login login = new Login();
         //b=true;

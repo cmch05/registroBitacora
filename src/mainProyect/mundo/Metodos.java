@@ -6,7 +6,7 @@
 package mainProyect.mundo;
 
 import mainProyect.interfaces.Login;
-import mainProyect.interfaces.Menu01;
+import mainProyect.interfaces.Usuarios;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
