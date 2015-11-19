@@ -17,8 +17,9 @@ public class SecuenciasConsultaSql {
     public SecuenciasConsultaSql(String parametro) {
         this.parametro = parametro;
     }
-    private String sql;
     
+    private String sql;
+    private String[] titulo;
     
     public String buscarUsuario(){
     sql = "select codigo, nombre, apellido,cedula,domicilio, ciudad,"
@@ -29,7 +30,7 @@ public class SecuenciasConsultaSql {
     return sql;
     }
     public String[] tituloBuscarUsuario(){
-        String titulo[]={"Codigo","Nombre","Apellido","Cedula","Direccion","Ciudad",
+         titulo=new String[]{"Codigo","Nombre","Apellido","Cedula","Direccion","Ciudad",
             "Departamento","Fecha de Nacimiento"};
         return titulo;
     }
@@ -46,5 +47,10 @@ public class SecuenciasConsultaSql {
         String titulo[]={"Codigo","Nombre","Editorial","Autor","Genero","Pais del Autor",
             "Paginas","Fecha de Edicion","Precio"};
         return titulo;
+    }
+    public String nuevoLibro(){
+        sql="insert into libro(nombre, editorial, autor, genero, pais_autor,"
+            + "paginas, anno_edicion, precio) values(?,?,?,?,?,?,?,?)";
+        return sql;
     }
 }

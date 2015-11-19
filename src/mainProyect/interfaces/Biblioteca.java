@@ -8,6 +8,7 @@ import java.sql.Connection;
 import javax.swing.JOptionPane;
 import mainProyect.ConectarSql;
 import mainProyect.ConsultaSql;
+import mainProyect.InsertSql;
 import mainProyect.ModeloTabla;
 import mainProyect.SecuenciasConsultaSql;
 import mainProyect.mundo.MetodosBiblioteca;
@@ -17,12 +18,13 @@ import mainProyect.mundo.MetodosBiblioteca;
  * @author cmch05
  */
 public class Biblioteca extends javax.swing.JFrame {
-    SecuenciasConsultaSql secuencia ;
-    ConsultaSql consulta;
-    ConectarSql conectar;
-    MetodosBiblioteca metodo;
-    ModeloTabla modelo;
-    SecuenciasConsultaSql sql;
+    private SecuenciasConsultaSql secuencia ;
+    private ConsultaSql consulta;
+    private  ConectarSql conectar;
+    private MetodosBiblioteca metodo;
+    private ModeloTabla modelo;
+    private SecuenciasConsultaSql sql;
+    private InsertSql insertar;
 
     /**
      * Creates new form Biblioteca
@@ -247,7 +249,7 @@ public class Biblioteca extends javax.swing.JFrame {
                         .addGap(18, 18, 18))))
         );
 
-        jTabbedPane1.addTab("Agregar", jPanel3);
+        jTabbedPane1.addTab("Agregar Libro", jPanel3);
 
         jLabel10.setText("Buscar por:");
 
@@ -470,6 +472,9 @@ public class Biblioteca extends javax.swing.JFrame {
 
     private void btnBuscarPrestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPrestamoActionPerformed
         
+        ModeloTabla mymodelo= new ModeloTabla();
+        mymodelo.getModel();
+        
         
         
     }//GEN-LAST:event_btnBuscarPrestamoActionPerformed
@@ -488,16 +493,35 @@ public class Biblioteca extends javax.swing.JFrame {
         
         modelo= new ModeloTabla(ssql, titulo, conectar.coneccion());
         tblLibro.setModel(modelo.getModel());
-        //DefaultTableModel getModel= new DefaultTableModel(null, titulo);
-       
         
         
-        
+         
     }//GEN-LAST:event_btnBuscarLibroActionPerformed
 
     private void btnAgregarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarLibroActionPerformed
         
+        conectar= new ConectarSql("root", "", "localhost", "biblioteca");
+        sql= new SecuenciasConsultaSql();
+        String ssql= sql.nuevoLibro();
+        String nombre,editorial,autor,genero,paisAutor,paginas,anno_edicion,precio;
+        nombre=txtNombreLibro.getText();
+        editorial=txtEditorial.getText();
+        autor= txtAutorLibro.getText();
+        genero=txtGeneroLibro.getText();
+        paisAutor= txtPaisLibro.getText();
+        paginas= txtPaginasLibro.getText();
+        anno_edicion= txtAñoLibro.getText();
+        precio= txtPrecio.getText();
         
+        String libro[] ={nombre,editorial,autor,genero,paisAutor,paginas,
+                    anno_edicion,precio};
+        
+        insertar= new InsertSql(ssql,libro,conectar.coneccion());
+        
+        insertar.getInsert();
+        
+        
+        ;
         
     }//GEN-LAST:event_btnAgregarLibroActionPerformed
 
