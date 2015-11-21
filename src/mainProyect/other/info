@@ -1,0 +1,62 @@
+comandos mySQL
+-select datediff(curdate(),'2015-12-01');//cuenta los dias entre las dos fechas
+-show events;
+-show triggers;
+-DROP TRIGGER [IF EXISTS] [schema_name.]trigger_name
+-drop event nombre_evento;
+- \c  //cancelar comando
+- primary key //clave primaria
+- foreign key // FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
+		clave foranea, hace referencia a una columna de otra tabla
+- select database(); informa de la base de datos actualmente en uso
+
+-use nombre_basededatos; //selecciona la base de datos con el nombre dado
+-show databases;  //muestra las bases de datos
+-show tables;// muestra las tablas de una base de datos
+-create una_basededatos; //crea una base de datos con el nombre dado
+-create table nombre_detabla(
+	nombre		varchar(20),
+	apellido 	varchar(20),
+	sueldo		float(10,2) default 200000,//default define el valor que tomara cuando no
+						//se intruduzca un valor
+	clave		int(4) zerofill not null auto_increment,
+	primary key (clave)); //crea una tabla con el nombre dado con las columnas dadas y con los tipos de datos a ingresar dados, diciendo que la clave primaria no puede ser null y va a ser auto incremental
+-alter table nombre_tabla add(nuva_columna varchar(20), primary key(nombre_columna));//modifica
+	//las tablas agregando o borrando columnas;
+-alter table nombre_tabla modify nombre_columna varchar(14) default ’gato’;//"modify" modifica las propiedades de la columna;
+-alter table nombre_tabla change nombre otro_nombre varchar(20);// "change" permite modificar el nombre de la columna y las propiedades;
+-alter table nombre_tabla rename otro_nombre; //para cambiar el nombre de la tabla;
+-alter table nombre_tabla drop(primary key);//para eliminar la clave primaria
+
+--ALTER TABLE nombre-tabla MODIFY COLUMN nombre-columna tipo-columna FIRST; //
+    	Mover la columna "nombre-columna" de la tabla "nombre-tabla" al principio
+	para moverla despues de otra columna se cambia el first por after y la 	otra columna
+-zerofill // el atributo zerofill en los valores numericos rellena de ceros a la izquierda el valor
+	// cualquier valor negativo es un valor invalido
+-- se pueden crear restricciones sobre las tablas tales como :
+	primary key (nombre_columna),
+	unique,  // dos registros no pueden contener el mismo contenido en esta columna
+	foreing key (nombre_columna) references otra_tabla// reference indica que la 
+	// columna solo puede tomar valores que existan en la otra tabla 
+	// en la columna con el mismo nombrere. ferencia.p22
+-describe nombre_tabla; //vemos la estructura de la tabla
+-drop table nobre_tabla; // elimina la tabla con el nombre dado
+-drop database nombre_database; // elimina la base de datos con el nombre dado
+-insert into usuarios(nombre, clave) values('Cristian Guerrero','94463816');//le decimos que vamos a insertar en la tabla con nombre dado = 'insert into' nombre_tabla entre parentesis le decimos que columnas o atributos vamos a insertar; escribimos que valores le vamos a dar 'value' y entre parentesis separados por comas los valores, los valores se deben ingresar en el mismo orden en que se nombran los campos;las cadenas de caracteres es obigacion ponerlas en comillas simples
+-select columna1,columna2 from nombre_tabla;//select recupera los registros de la tabla en las columnas seleccionadas; para ver los nombres de columnas se utiliza el comando describe;
+-selet  from nombre_tabla;// seleccionamos todos los registros de la tabla.
+-selet  from nombre_tabla where columna='condicion';//el where hace que se seleccionen los registros que cumplan cierta condicion
+-valores condicionales ="igual",<>"diferente de"<"menor",>"mayor", >="mayor o igual a"
+-delete from nombre_tabla //elimina todos los registros de la tabla
+-delete from nombre_tabla where columna="condicion";//se elimina los registros que cumplan la condicion
+-update nombre_tabla set nombre_columna="valor_que_va_a_reemplazar";//update el comando para actualizar la tabla dada, set para actualizar el atributo con el nuevo valor dado, este cambio afecta a todos los registros
+-update nombre_tabla set nombre_columna="valor_que_va_a_reemplazar" where nombre_columna="condicion";//actualiza los registros que cumplan la condicion dada
+-update nombre_tabla set nombre_columna1= "valor_que_va_a_reemplazar1", nombre_columna2="valor_que_va_a_reemplazar2" where nombre_columna="condicion"; // se pueden reemplazar varas columnas o varios atributos de los registros separados por comas, que cumplan la condicion dada
+-truncate table nombre_tabla; //(vacia) elemina todos los registros de la tabla  y la vuelve a crear con la misma estructura a diferencia de drop que la elimina del todo, la diferencia con delete es la velocidad, se nota cuando hay muchos registros, ademas reinicia el auto_increment, cosa que no hace el delete,el delete sigue los registros con el auto incremental donde quedo el anterior registro
+-al crear la tabla originalmente hacepta valores null, si no se desea que reciba valores null se debe especificar al crear la tabla: create table nombre_tabla(unaColumna varchar(20) not null); null no es lo mismo que una cadena vacia o un cero 0
+-select * from nombre_tabla where unaColumna is null; //este es el metodo para recuperar valores null, no se pueden recuperear de forma normal con = o <>, tambien se puede usar "is not null", con esa condicion se recuperarian los registros cuyo valor es null
+-create table nombre_tabla(unaColumna varchar(20) unsigned);// el atributo "unsigned" permite solo valores positivos ademas en los integer duplica la capacidad ya que no toma valores negativos, pero en los float no pasa eso, muy util para precios.
+-select * from tabla where year(fecha)=2005 and month(fecha)=12;buscar en fecha
+	por mes o por año solamente
+
+

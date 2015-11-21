@@ -274,7 +274,7 @@ public class Usuarios extends javax.swing.JFrame {
             //ResultSet rs = pst.executeQuery(sSQL);
 
             pst.setString(1, txtNombre.getText());
-            pst.setString(2, pass);
+            pst.setString(2, passEncriptado);
             pst.setInt(3, estado);
             pst.setString(4, fechaLimite);
             pst.setInt(5, nivel);
@@ -299,20 +299,20 @@ public class Usuarios extends javax.swing.JFrame {
         int estado = 0;
         String sSQL = "";
         nivel = (int) niveles.get(cboNivel.getSelectedIndex());
-        sSQL = "select curdate() <= '" + fechaLimite + "'";
-
-        try {
-            PreparedStatement pst = con.prepareStatement(sSQL);
-            ResultSet rs = pst.executeQuery(sSQL);
-            while (rs.next()) {
-                estado = rs.getInt(1);
-            }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "introduzca la fecha con formato yyyy,mmm,dd ");
-        }
-        sSQL = "update usuario set login=?,password=?, estado=?, fecha=?, nivel=?"
-                + " where login = '"+usuarioSeleccionado+"' ";
-        
+//        sSQL = "select curdate() <= '" + fechaLimite + "'";
+//
+//        try {
+//            PreparedStatement pst = con.prepareStatement(sSQL);
+//            ResultSet rs = pst.executeQuery(sSQL);
+//            while (rs.next()) {
+//                estado = rs.getInt(1);
+//            }
+//        } catch (SQLException ex) {
+//            JOptionPane.showMessageDialog(null, "introduzca la fecha con formato yyyy,mmm,dd ");
+//        }
+//        sSQL = "update usuario set login=?,password=?, estado=?, fecha=?, nivel=?"
+//                + " where login = '"+usuarioSeleccionado+"' ";
+//        
         
         //************************************
         ArrayList lista = new ArrayList();
