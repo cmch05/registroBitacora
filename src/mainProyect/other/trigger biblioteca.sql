@@ -1,5 +1,10 @@
+-- en una columna auto_increment el new es 0 entonces toca cojer el old +1
 
 
+
+
+
+-- ------------------------------------------------------------------
 delimiter //
    drop trigger if exists update_usuario; //
     create trigger update_usuario
@@ -14,7 +19,8 @@ delimiter //
     end //
     delimiter;
 
-//////////////////////////////////////////////////
+-- //////////////////////////////////////////////////
+
 evento diario revisar deudores s
 
 delimiter //
@@ -33,8 +39,8 @@ delimiter //
     end;//	
 			
  
- ////////////////////////////////////////////////////////////////////////
- ejemplos consultas
+ -- ////////////////////////////////////////////////////////////////////////
+ -- ejemplos consultas
  comment '   
 insert into deuda(pedido,codigo_usuario,codigo_libro,estado,dias_mora,multa) select pedido,
 	codigo_usuario, codigo_libro, if(fecha_maxima>now(),'deudor', 'limpio')as estado, 
@@ -52,6 +58,10 @@ comment ' select count(*), usuario.nombre as usuario, libro.nombre as nombre_lib
         from usuario join deuda on deuda.codigo_usuario=usuario.codigo join 
         libro on deuda.codigo_libro=libro.codigo where deuda.estado='deudor' 
         group by usuario having count(*)>1;
+'
+comment 'select octet_length(imagen) from usuario where nombre='neko2';
+'
+comment ' select nombre from usuario where length(nombre)<6;
 '
     
 	drop trigger if exists update_deuda; //

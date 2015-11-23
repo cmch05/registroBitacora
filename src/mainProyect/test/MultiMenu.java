@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mainProyect.interfaces;
+package mainProyect.test;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
