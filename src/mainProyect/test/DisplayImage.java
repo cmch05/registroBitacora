@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import javax.swing.filechooser.*;
-import mainProyect.ConectarSql;
+import mainProyect.sql.ConectarSql;
 
 /**
  *

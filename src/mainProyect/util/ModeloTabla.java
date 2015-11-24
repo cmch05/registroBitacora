@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mainProyect;
+package mainProyect.util;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import mainProyect.sql.ConsultaSql;
 
 /**
  *

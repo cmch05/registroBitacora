@@ -5,12 +5,16 @@
  */
 package mainProyect.interfaces;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import mainProyect.ConectarSql;
-import mainProyect.ConsultaSql;
-import mainProyect.InsertSql;
-import mainProyect.ModeloTabla;
-import mainProyect.SecuenciasConsultaSql;
+import mainProyect.sql.ConectarSql;
+import mainProyect.sql.ConsultaSql;
+import mainProyect.sql.InsertSql;
+import mainProyect.util.ModeloTabla;
+import mainProyect.sql.SecuenciasConsultaSql;
 import mainProyect.mundo.MetodosBiblioteca;
 
 /**
@@ -20,7 +24,7 @@ import mainProyect.mundo.MetodosBiblioteca;
 public class Biblioteca extends javax.swing.JFrame {
     private SecuenciasConsultaSql secuencia ;
     private ConsultaSql consulta;
-    private  ConectarSql conectar;
+    private final ConectarSql conectar= new ConectarSql("root", "", "localhost", "biblioteca");
     private MetodosBiblioteca metodo;
     private ModeloTabla modelo;
     private SecuenciasConsultaSql sql;
@@ -31,6 +35,10 @@ public class Biblioteca extends javax.swing.JFrame {
      */
     public Biblioteca() {
         initComponents();
+        //cboDepartamento.addItem("");
+        cargarComboDepartamento();
+        cboCidudad.setEnabled(false);
+        
     }
 
     /**
@@ -88,6 +96,9 @@ public class Biblioteca extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
+        cboDepartamento = new javax.swing.JComboBox<>();
+        cboCidudad = new javax.swing.JComboBox<>();
+        jLabel17 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblLibro = new javax.swing.JTable();
         txtCerrar = new javax.swing.JButton();
@@ -320,6 +331,14 @@ public class Biblioteca extends javax.swing.JFrame {
 
         jLabel16.setText("Apellido");
 
+        cboDepartamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboDepartamentoActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setText("Departamento");
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -334,69 +353,85 @@ public class Biblioteca extends javax.swing.JFrame {
                     .addComponent(btnBuscarSuscriptor)
                     .addComponent(txtBuscarSuscriptor, javax.swing.GroupLayout.Alignment.LEADING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(txtNacimientoSus, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                        .addComponent(btnAgregarSus, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel15)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cboCidudad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(cboDepartamento, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtNombreSus, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
                             .addComponent(txtCedulaSus, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
                             .addComponent(jLabel13)
-                            .addComponent(jLabel12))
-                        .addGap(41, 41, 41)
+                            .addComponent(jLabel12)))
+                    .addComponent(jLabel17))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel14)
-                                .addComponent(txtApellidoSus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtDireccionSus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel16))))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(41, 41, 41)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel14)
+                                        .addComponent(txtApellidoSus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel16)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel15)
+                                    .addComponent(txtDireccionSus, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                            .addGap(41, 41, 41)
+                            .addComponent(txtNacimientoSus, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnAgregarSus, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(cboSuscriptor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(txtBuscarSuscriptor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnBuscarSuscriptor)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel16)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtApellidoSus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
-                        .addComponent(jLabel14)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(jLabel16)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtApellidoSus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(49, 49, 49)
+                                .addComponent(jLabel14))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(jLabel12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtNombreSus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel13)
+                                .addGap(6, 6, 6)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtCedulaSus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtDireccionSus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtDireccionSus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel12)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel17))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtNombreSus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel13)
-                        .addGap(6, 6, 6)
-                        .addComponent(txtCedulaSus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel15)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtNacimientoSus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboDepartamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(btnAgregarSus))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtNacimientoSus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(47, 47, 47))
+                        .addGap(19, 19, 19)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(cboSuscriptor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(txtBuscarSuscriptor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnBuscarSuscriptor)))
+                .addGap(16, 16, 16)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cboCidudad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAgregarSus))
+                .addGap(48, 48, 48))
         );
 
         jTabbedPane1.addTab("Suscriptores", jPanel5);
@@ -480,13 +515,29 @@ public class Biblioteca extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarPrestamoActionPerformed
 
     private void btnAgregarSusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarSusActionPerformed
+    
+        String nombre,apellido, cedula,direccion,nacimiento,ciudad,departamento;
+        String[] campos={"nombre","apellido","cedula","domicilio","ciudad",
+                        "departamento","nacimiento"};
+       
         
+        nombre=txtNombreSus.getText();
+        apellido= txtApellidoSus.getText();
+        cedula= txtCedulaSus.getText();
+        direccion= txtDireccionSus.getText();
+        nacimiento=txtNacimientoSus.getText();
+        departamento= cboDepartamento.getSelectedItem().toString();
+        ciudad= cboCidudad.getSelectedItem().toString();
+        sql= new SecuenciasConsultaSql(nombre, apellido, cedula, direccion, nacimiento, ciudad, departamento);
+        insertar= new InsertSql(sql.nuevoUsuario(), campos, conectar.coneccion());
+        
+        JOptionPane.showMessageDialog(null, sql);
         
         
     }//GEN-LAST:event_btnAgregarSusActionPerformed
 
     private void btnBuscarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarLibroActionPerformed
-        conectar= new ConectarSql("root", "", "localhost", "biblioteca");
+        
         sql= new SecuenciasConsultaSql(txtBuscarLibro.getText());
         String ssql= sql.buscarLibro();
         String titulo[] =sql.tituloBuscarlibro();
@@ -500,7 +551,7 @@ public class Biblioteca extends javax.swing.JFrame {
 
     private void btnAgregarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarLibroActionPerformed
         
-        conectar= new ConectarSql("root", "", "localhost", "biblioteca");
+        
         sql= new SecuenciasConsultaSql();
         String ssql= sql.nuevoLibro();
         String nombre,editorial,autor,genero,paisAutor,paginas,anno_edicion,precio;
@@ -521,12 +572,41 @@ public class Biblioteca extends javax.swing.JFrame {
         insertar.getInsert();
         
         
-        ;
+        
         
     }//GEN-LAST:event_btnAgregarLibroActionPerformed
-
+    //--------------------------------------------------------------------
+    public void cargarComboDepartamento(){
+        sql= new SecuenciasConsultaSql();
+        consulta= new ConsultaSql(conectar.coneccion(), sql.selectDepartamento());
+        ResultSet rs =consulta.getResultSet();
+        try {
+            while(rs.next()){
+                cboDepartamento.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Biblioteca.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void cargarComboCiudad(){
+        String parametro= (String) cboDepartamento.getSelectedItem();
+        
+        cboCidudad.removeAllItems();
+        sql= new SecuenciasConsultaSql(parametro);
+        consulta= new ConsultaSql(conectar.coneccion(), sql.selectCiudad());
+        ResultSet rs =consulta.getResultSet();
+        try {
+            while(rs.next()){
+                cboCidudad.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Biblioteca.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        cboCidudad.setEnabled(true);
+    }
+    //----------------------------------------------------------------------
     private void btnBuscarSuscriptorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarSuscriptorActionPerformed
-        conectar= new ConectarSql("root", "", "localhost", "biblioteca");
+        
         sql= new SecuenciasConsultaSql(txtBuscarSuscriptor.getText());
         String ssql= sql.buscarUsuario();
         String titulo[] =sql.tituloBuscarUsuario();
@@ -546,6 +626,12 @@ public class Biblioteca extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnBuscarSuscriptorActionPerformed
 
+    private void cboDepartamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboDepartamentoActionPerformed
+        cargarComboCiudad();
+        
+    }//GEN-LAST:event_cboDepartamentoActionPerformed
+
+    
     /**
      * @param args the command line arguments
      */
@@ -587,6 +673,8 @@ public class Biblioteca extends javax.swing.JFrame {
     private javax.swing.JButton btnBuscarLibro;
     private javax.swing.JButton btnBuscarPrestamo;
     private javax.swing.JButton btnBuscarSuscriptor;
+    private javax.swing.JComboBox<String> cboCidudad;
+    private javax.swing.JComboBox<String> cboDepartamento;
     private javax.swing.JComboBox<String> cboPrestamo;
     private javax.swing.JComboBox<String> cboSuscriptor;
     private javax.swing.JFormattedTextField jFormattedTextField1;
@@ -598,6 +686,7 @@ public class Biblioteca extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

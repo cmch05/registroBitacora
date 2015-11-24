@@ -1,5 +1,5 @@
 
-package mainProyect;
+package mainProyect.util;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 

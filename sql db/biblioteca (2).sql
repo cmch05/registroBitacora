@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 24, 2015 at 03:04 AM
+-- Generation Time: Nov 24, 2015 at 07:55 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -19,6 +19,120 @@ SET time_zone = "+00:00";
 --
 -- Database: `biblioteca`
 --
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `buscarlibro`(in parametro varchar(50))
+begin
+		
+        select codigo, nombre, editorial,autor,genero, pais_autor,
+			paginas,anno_edicion,precio from libro
+			where concat(codigo,' ',nombre,' ', editorial,' ',autor,' ',genero,
+            ' ', pais_autor,' ', paginas,' ', anno_edicion,' ',precio)
+			like  concat('%', parametro, '%');
+	end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `buscarusuario`(in parametro varchar(50))
+begin
+		
+        select 	codigo, nombre, apellido,cedula,domicilio, ciudad,
+				departamento,nacimiento from usuario
+				where concat(nombre,' ', apellido,' ',cedula,' ',domicilio,
+				' ', ciudad,' ', departamento,' ', nacimiento)
+                  like  concat('%', parametro, '%');
+	end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `nuevolibro`(in _nombre varchar(50), in _editorial varchar(50),
+				in _autor varchar(50), in _genero varchar(50), in _pais_autor varchar(50),
+                in _paginas smallint, in _anno_edicion date, in _precio float(9,2))
+begin
+		
+        insert into libro(nombre, editorial, autor, genero, pais_autor,
+				paginas, anno_edicion, precio) values(_nombre , _editorial ,
+				_autor ,_genero , _pais_autor ,
+				_paginas ,_anno_edicion , _precio );
+            
+	end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `nuevousuario`(in _nombre varchar(50), in _apellido varchar(50),
+				in _cedula varchar(50), in _domicilio varchar(50), in _ciudad varchar(50),
+                in _departamento varchar(50), in _nacimiento date)
+begin
+		
+        insert into usuario() values(null, _nombre , _apellido ,
+				_cedula ,_domicilio , _ciudad ,
+				_departamento ,_nacimiento);
+            
+	end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectciudad`(in parametro varchar(50))
+begin
+		
+        select c.nombre as nom_cidudad from ciudad as c
+        join departamento  as d on d.codigo= c.departamento where d.nombre=parametro;
+	end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectdepartamento`()
+begin
+		
+        select nombre from departamento;
+	end$$
+
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ciudad`
+--
+
+CREATE TABLE IF NOT EXISTS `ciudad` (
+  `codigo` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) DEFAULT NULL,
+  `departamento` smallint(5) unsigned DEFAULT NULL,
+  PRIMARY KEY (`codigo`),
+  KEY `departamento` (`departamento`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+
+--
+-- Dumping data for table `ciudad`
+--
+
+INSERT INTO `ciudad` (`codigo`, `nombre`, `departamento`) VALUES
+(2, 'caicedonia', 1),
+(3, 'sevilla', 1),
+(4, 'tulua', 1),
+(5, 'cali', 1),
+(6, 'pereira', 2),
+(7, 'manizales', 3),
+(8, 'chinchina', 3),
+(9, 'armenia', 4),
+(10, 'calarca', 4),
+(11, 'barcelona', 4);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `departamento`
+--
+
+CREATE TABLE IF NOT EXISTS `departamento` (
+  `codigo` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`codigo`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `departamento`
+--
+
+INSERT INTO `departamento` (`codigo`, `nombre`) VALUES
+(1, 'valle'),
+(2, 'risaralda'),
+(3, 'caldas'),
+(4, 'quindio');
 
 -- --------------------------------------------------------
 
@@ -85,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `libro` (
   `anno_edicion` date DEFAULT NULL,
   `precio` float(9,2) DEFAULT NULL,
   PRIMARY KEY (`codigo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 --
 -- Dumping data for table `libro`
@@ -100,7 +214,8 @@ INSERT INTO `libro` (`codigo`, `nombre`, `editorial`, `autor`, `genero`, `pais_a
 (6, 'Diplomacio', 'S.M.', 'Henry Kissinger', 'Politico', 'Alemania', 825, '1997-01-01', 1750.00),
 (7, 'Los Windsor', 'Paza & Janéz', 'Kitty Kalley', 'Biografías', 'Gran Bretaña', 620, '1998-01-01', 1130.00),
 (8, 'El Ultimo Emperador', 'Caralt', 'Pu-Yu', 'Autobiografías', 'China', 353, '1989-01-01', 995.00),
-(9, 'Fortuna y Jacinta', 'Paza & Janéz', 'Perez Galdós', 'Novela', 'España', 625, '1984-01-01', 725.00);
+(9, 'Fortuna y Jacinta', 'Paza & Janéz', 'Perez Galdós', 'Novela', 'España', 625, '1984-01-01', 725.00),
+(13, 'progamacion con java', 'Thomson Learning', 'Rick Decker , Stuar Hirshfield', 'Educacion', 'USA', 618, '2001-01-01', 2900.00);
 
 -- --------------------------------------------------------
 
@@ -153,7 +268,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `departamento` varchar(50) DEFAULT NULL,
   `nacimiento` datetime DEFAULT NULL,
   PRIMARY KEY (`codigo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `usuario`
@@ -165,11 +280,18 @@ INSERT INTO `usuario` (`codigo`, `nombre`, `apellido`, `cedula`, `domicilio`, `c
 (3, 'Ines', 'Posada Gil', '3875929', 'Edifici Alpes ap201', 'Pereira', 'Risaralda', '1971-04-07 00:00:00'),
 (4, 'Jose', 'Sanchez Pons', '3777929', 'Av Bolivar 2N 40', 'Armenia', 'Quindio', '1966-06-09 00:00:00'),
 (5, 'migue', 'Gomez Saez', '73240455', 'Las Colinas casa 20', 'Armenia', 'Quindio', '1976-12-09 00:00:00'),
-(6, 'Carlos Mario', 'Marin Duque', '98092261506', 'cr 15 16-43', 'Caicedonia', 'Valle', '1998-09-22 00:00:00');
+(6, 'Carlos Mario', 'Marin Duque', '98092261506', 'cr 15 16-43', 'Caicedonia', 'Valle', '1998-09-22 00:00:00'),
+(9, 'cristian', 'guerrero', '94463816', 'cr 10-15-66', 'caicedonia', 'valle', '1984-05-05 00:00:00');
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `ciudad`
+--
+ALTER TABLE `ciudad`
+  ADD CONSTRAINT `ciudad_ibfk_1` FOREIGN KEY (`departamento`) REFERENCES `departamento` (`codigo`);
 
 --
 -- Constraints for table `deuda`

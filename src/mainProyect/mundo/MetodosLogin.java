@@ -5,6 +5,8 @@
  */
 package mainProyect.mundo;
 
+import mainProyect.sql.ConsultaSql;
+import mainProyect.sql.ConectarSql;
 import mainProyect.interfaces.*;
 
 import java.awt.event.*;
