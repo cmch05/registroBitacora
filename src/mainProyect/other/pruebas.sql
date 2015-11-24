@@ -86,20 +86,33 @@ end; //
 
 -- estados
 comment '
-            "AGUASCALIENTES","MORELOS","BAJA CALIFORNIA","NAYARIT",
+            
+            
             "BAJA CALIFORNIA SUR","NUEVO LEON","CAMPECHE","OAXACA",
             "CHIAPAS","PUEBLA","CHIHUAHUA","QUERETARO","COAHUILA","QUINTANA ROO",
-            "COLIMA","SAN LUIS POTOSI","DISTRITO FEDERAL","SINALOA","DURANGO",
+            "COLIMA","SAN LUIS POTOSI",
+            
+            
             "SONORA","GUANAJUATO","TABASCO","GUERRERO","TAMAULIPAS","HIDALGO",
             "TLAXCALA","JALISCO","VERACRUZ","MEXICO","YUCATÁN",
             "MICHOACAN","ZACATECAS"
         
-        
-            "AS","MS","BC","NT","BS","NL","CC","OC","CS","PL","CH","QT",
-            "CL","QR","CM","SP","DF","SL","DG","SR","GT","TC","GR","TS",
+        insert into entidad() values("DF","DISTRITO FEDERAL"), ("SL","SINALOA"),("DG","DURANGO");
+            
+            "BS","NL","CC","OC","CS","PL","CH","QT",
+            "CL","QR","CM","SP",
+            "SR","GT","TC","GR","TS",
             "HG","TL","JC","VZ","MC","YN","MN","ZS"
-        
+            
+            
+            "DF","SL","DG","AS","MS","BC","NT",
+			
+            "DISTRITO FEDERAL","SINALOA","DURANGO",
+            "AGUASCALIENTES","MORELOS","BAJA CALIFORNIA","NAYARIT",
 '
+
+
+
 
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `add_userblock`(IN user INT(11), IN blk INT(11))
