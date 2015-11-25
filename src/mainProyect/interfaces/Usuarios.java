@@ -263,7 +263,7 @@ public class Usuarios extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "introduzca la fecha con formato yyyy,mmm,dd ");
         }
 
-        sSQL = "insert into usuario(login, password, estado, fecha, nivel)"
+        sSQL = "insert into usuario(login, pass, estado, fecha, nivel)"
                 + " values(?,?,?,?,?) ";
         try {
             PreparedStatement pst = con.prepareStatement(sSQL);

@@ -1,23 +1,20 @@
 -- en una columna auto_increment el new es 0 entonces toca cojer el old +1
-
-
-
-
-
--- ------------------------------------------------------------------
-delimiter //
-   drop trigger if exists update_usuario; //
-    create trigger update_usuario
-    after update on usuario
-    for each row
-    begin
-		insert into historial(usuario,cambio,fecha) values(old.login, concat(
-        'actualizacion en: nombre ', new.login,'  contraseña: ',
-        new.password,'  estado: ',new.estado,
-        '  fecha: ',new.fecha,' nivel: ' , new.nivel ),now());
+-- --------TRIGGERS BIBLIOTECA-------------------------------------------------------------------
+DELIMITER //
+drop trigger if exists fechasalida; //
+create trigger fechasalida 
+before insert on  prestamo
+for each row 
+	begin
+		set new.fecha_salida= now();
+        set new.fecha_devolucion= now()+ interval 3 day;
+        set new.fecha_maxima= now()+ interval 5 day;
     
-    end //
-    delimiter;
+    end; //
+
+
+
+
 
 -- //////////////////////////////////////////////////
 

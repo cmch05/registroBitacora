@@ -1,6 +1,6 @@
 
 -- /////////////////////////////////////////////////////////////
-triggers login
+--  -------triggers login-------------------------------
 
 delimiter //
     drop trigger if exists insert_usuario; //
@@ -38,7 +38,7 @@ delimiter //
     begin
 		insert into historial(usuario,cambio,fecha) values(old.login, concat(
         'actualizacion en: nombre ', new.login,'  contraseña: ',
-        new.password,'  estado: ',new.estado,
+        new.pass,'  estado: ',new.estado,
         '  fecha: ',new.fecha,' nivel: ' , new.nivel ),now());
     
     end //
@@ -57,12 +57,12 @@ delimiter //
     set new.estado='1';
     end if;
     end;//
-    
     delimiter;
-    
-    
 -- ////////////////////////////////////////////////////
-triggers biblioteca    
+ 
+ 
+ 
+ 
     
 
  

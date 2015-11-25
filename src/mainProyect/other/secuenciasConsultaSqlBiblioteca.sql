@@ -69,19 +69,7 @@ create procedure selectciudad(in parametro varchar(50))
         join departamento  as d on d.codigo= c.departamento where d.nombre=parametro;
 	end; //
     
--- --------TRIGGERS BIBLIOTECA-------------------------------------------------------------------
-DELIMITER //
-drop trigger if exists fechasalida; //
-create trigger fechasalida 
-before insert on  prestamo
-for each row 
-	begin
-		set new.fecha_salida= now();
-        set new.fecha_devolucion= now()+ interval 3 day;
-        set new.fecha_maxima= now()+ interval 5 day;
-    
-    
-    end; //
+
 
 --  select c.nombre as nom_cidudad from ciudad as c  join departamento  as d on d.codigo= c.departamento where d.nombre='valle';
     -- llamar el procedimiento 
