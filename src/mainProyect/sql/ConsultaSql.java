@@ -33,5 +33,14 @@ public class ConsultaSql {
         }
         return rs;
     }
+    public void getConsulta(){
+        try{
+        pst=con.prepareStatement(sql);
+        pst.executeQuery(sql);
+        }
+        catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, " error "+ex);
+        }
+    }
     
 }

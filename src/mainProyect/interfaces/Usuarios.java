@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package mainProyect.interfaces;
 
 import java.awt.event.ActionEvent;
@@ -55,7 +51,7 @@ public class Usuarios extends javax.swing.JFrame {
         login.setVisible(false);
         
         this.setLocation(480,100);
-        this.setResizable(false);
+        //this.setResizable(false);
         this.perfil = perfil;
         initComponents();
 
