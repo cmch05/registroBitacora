@@ -41,6 +41,15 @@ create procedure login(in _usr varchar(50), in _pass varchar(50))
 		end if;
         
         select @_respuesta, @_nivel;
-        
 	end; //
+    --  ------------------------------------------------------------------
+    delimiter //
+    drop procedure if exists cambiointerface; //
+    create procedure cambiointerface(in _usr varchar(20))
+    begin
+    
+    insert into bitacora(login,fecha_ingreso,hora_ingreso)
+                values(_usr,curdate(),curtime());
+    
+    end; //
 

@@ -124,21 +124,9 @@ public class MetodosLogin {
         // Login login = new Login();
         //b=true;
 
-        //login.dispose();
-        sSQL = "insert into bitacora(login,fecha_ingreso,hora_ingreso)"
-                + "values('" + usr + "',curdate(),curtime())";
-        //  + " where login = '"+usr+"' and fecha >= current_date() and";
-        //like
+        sSQL= "login.cambiointerface("+usr+")";
+        consulta= new  ConsultaSql(conectar.coneccion(), sSQL);
 
-        try {
-            // JOptionPane.showMessageDialog(null, "veeeeeer ");
-            con = conectar.coneccion();
-            pst = con.prepareStatement(sSQL);
-            pst.execute();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "segundo error " + ex);
-            //*Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     public static void main(String[] args) {

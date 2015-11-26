@@ -36,7 +36,6 @@ begin
     set año = substring(year(new.nacimiento),3,2); 		-- año nacimiento
     set l1= substring(new.apellido1, 1,1); 	-- primera letra apellido 1
     set l11 = new.sexo;						-- sexo
-    -- set l4= substring(new.nombre, 1,1); 	-- primera letra nombre  OJO arrreglar para nombre compuesto
     set cod= new.entidad;
     -- ---------------------------------------
     
@@ -58,8 +57,12 @@ begin
 	end if;
     
 	if substring_index(nom,' ',1) ='maria' || substring_index(nom,' ',1) ='jose' then
-		set aux = substring_index(nom,' ',-1);
+		set aux = substring_index(nom,' ',-1); -- captura el segundo nombre de nombre compuesto
+		if aux=' ' then
+			set l4= substring(nom, 1,1);-- si hay espacio en blanco pero no segundo nombre
+		else
 		set l4= substring(aux, 1,1);	-- primera letra nombre
+        end if;
 	else
 		-- set aux = substring_index(nom,' ',1);
 		set l4= substring(nom, 1,1);	-- primera letra nombre

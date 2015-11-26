@@ -24,7 +24,7 @@ public class ConectarDB {
     }
     
     //instanciamos Connection
-    Connection con=null;
+    Connection conectar=null;
 
    
     //un metodo tipo Connection
@@ -32,7 +32,7 @@ public class ConectarDB {
         try{
             Class.forName("com.mysql.jdbc.Driver");
             //direccion base de datos, usurario, contraseña del usuario
-            con=DriverManager.getConnection("jdbc:mysql://localhost/login","root","");
+            conectar=DriverManager.getConnection("jdbc:mysql://localhost/login","root","");
             
            // JOptionPane.showMessageDialog(null, "coneccion establecida");
         }
@@ -40,14 +40,14 @@ public class ConectarDB {
         catch(ClassNotFoundException | SQLException | HeadlessException e){
             JOptionPane.showMessageDialog(null, "Error en la coneccion "+e);
         }
-        return con;
+        return conectar;
     }
     /*
      public Connection conectar(){
         try{
             Class.forName("com.mysql.jdbc.Driver");
             //direccion base de datos, usurario, contraseña del usuario
-            con=DriverManager.getConnection("jdbc:mysql://"+server+"/login",usr,pass);
+            conectar=DriverManager.getConnection("jdbc:mysql://"+server+"/login",usr,pass);
             
            // JOptionPane.showMessageDialog(null, "coneccion establecida");
         }
@@ -55,7 +55,7 @@ public class ConectarDB {
         catch(ClassNotFoundException | SQLException | HeadlessException e){
             JOptionPane.showMessageDialog(null, "Error: "+e);
         }
-        return con;
+        return conectar;
     }
     */
 }

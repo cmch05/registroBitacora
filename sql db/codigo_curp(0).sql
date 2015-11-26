@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 26, 2015 at 01:13 PM
+-- Generation Time: Nov 24, 2015 at 03:04 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -19,6 +19,23 @@ SET time_zone = "+00:00";
 --
 -- Database: `codigo_curp`
 --
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `inpares`(in n int)
+begin
+		declare contador int default 0;
+        bucle1: while contador <= n do
+			if (contador %2 !=0) then
+				select contador;
+			end if;
+		set contador = contador +1;
+		end while bucle1;
+	end$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -68,9 +85,8 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 --
 
 INSERT INTO `usuario` (`curp`, `nombre`, `apellido1`, `apellido2`, `sexo`, `nacimiento`, `entidad`) VALUES
-('DOXA000101MDFMXS63', 'jose antonio', 'dominguez', NULL, 'm', '2000-01-01', 'df'),
-('DOXJ000101MDFMXS39', 'jose ', 'dominguez', NULL, 'm', '2000-01-01', 'df'),
-('FEXM000101MDFLXR00', 'maria ', 'feliciano', NULL, 'm', '2000-01-01', 'df');
+('FAXA870222MDFLXN54', 'anacheta', 'fallez', NULL, 'm', '1987-02-22', 'df'),
+('MERF971212HDGNDB64', 'fabian', 'mendez', 'rodriguez', 'h', '1997-12-12', 'dg');
 
 --
 -- Triggers `usuario`
@@ -79,10 +95,9 @@ DROP TRIGGER IF EXISTS `curp1`;
 DELIMITER //
 CREATE TRIGGER `curp1` BEFORE INSERT ON `usuario`
  FOR EACH ROW begin
-	   declare nom varchar(20) ;
+	-- declare nom varchar(20) ;
     -- declare ap1 varchar(20);
 	   declare ap2 varchar(20) ; -- default 'x';
-       declare aux varchar(20); -- auxiliar nombre
     -- declare sex varchar(1);
     -- declare nacim date;
     -- declare entid varchar (20);
@@ -96,7 +111,7 @@ CREATE TRIGGER `curp1` BEFORE INSERT ON `usuario`
     declare cod varchar(2); 	-- codigo entidad federal 
     declare l14 varchar(1); -- primera consonante interna apellido paterno
     declare l15 varchar(1); -- primera consonante interna apellido materno
-    declare l16 varchar(1); -- primera consonante interna  nombre
+    declare l16 varchar(1); -- primera consonante interna apellido nombre
     declare aleatorio1 varchar(1); -- dos numeros aleatoreos
     declare aleatorio2 varchar(1);
 	-- ---------------------------------------
@@ -106,12 +121,11 @@ CREATE TRIGGER `curp1` BEFORE INSERT ON `usuario`
     -- ----------------------------
     declare i int(2) default 1; -- contador
 	set ap2 =new.apellido2; -- variable apellido 2 
-    set nom = new.nombre;
     -- ---------------------------------
     set año = substring(year(new.nacimiento),3,2); 		-- año nacimiento
     set l1= substring(new.apellido1, 1,1); 	-- primera letra apellido 1
     set l11 = new.sexo;						-- sexo
-    -- set l4= substring(new.nombre, 1,1); 	-- primera letra nombre  OJO arrreglar para nombre compuesto
+    set l4= substring(new.nombre, 1,1); 	-- primera letra nombre  OJO arrreglar para nombre compuesto
     set cod= new.entidad;
     -- ---------------------------------------
     
@@ -128,23 +142,9 @@ CREATE TRIGGER `curp1` BEFORE INSERT ON `usuario`
     
     if ap2 is null then 
 		set l3= 'x'; -- x sin  apellido2 es null
-	else
-		set l3= substring(ap2, 1,1);	-- primera letra apellido 
-	end if;
-    
-	if substring_index(nom,' ',1) ='maria' || substring_index(nom,' ',1) ='jose' then
-		set aux = substring_index(nom,' ',-1); -- captura el segundo nombre de nombre compuesto
-		if aux=' ' then
-			set l4= substring(nom, 1,1);
-		else
-		set l4= substring(aux, 1,1);	-- primera letra nombre
-        end if;
-	else
-		-- set aux = substring_index(nom,' ',1);
-		set l4= substring(nom, 1,1);	-- primera letra nombre
-        
-	end if;
-    
+    else
+		set l3= substring(ap2, 1,1);	-- primera letra apellido 2						
+    end if ;
     bu1: while i< length(new.apellido1) do
 		if(substring(new.apellido1,i,1)='a'||substring(new.apellido1,i,1)='e'
 			||substring(new.apellido1,i,1)='i'||substring(new.apellido1,i,1)='o'
