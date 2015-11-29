@@ -10,8 +10,8 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import mainProyect.sql.ConectarSql;
-import mainProyect.sql.ConsultaSql;
+import mainProyect.util.ConectarSql;
+import mainProyect.util.ConsultaSql;
 import mainProyect.sql.InsertSql;
 import mainProyect.util.ModeloTabla;
 import mainProyect.sql.SecuenciasConsultaSql;
@@ -151,7 +151,7 @@ public class Biblioteca extends javax.swing.JFrame {
                 .addComponent(txtBuscarLibro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnBuscarLibro)
-                .addContainerGap(126, Short.MAX_VALUE))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Buscar", jPanel2);
@@ -259,7 +259,7 @@ public class Biblioteca extends javax.swing.JFrame {
                         .addComponent(txtGeneroLibro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                         .addComponent(jLabel9)
                         .addGap(5, 5, 5)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -327,7 +327,7 @@ public class Biblioteca extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel22)
                     .addComponent(lblDevolucionMax, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(btnPrestar)
                 .addContainerGap())
         );
@@ -610,11 +610,11 @@ public class Biblioteca extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarPrestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPrestamoActionPerformed
-        
+        /*
         ModeloTabla mymodelo= new ModeloTabla();
         mymodelo.getModel();
         
-        
+        */
         
     }//GEN-LAST:event_btnBuscarPrestamoActionPerformed
 
@@ -640,10 +640,10 @@ public class Biblioteca extends javax.swing.JFrame {
         
         sql= new SecuenciasConsultaSql(txtBuscarLibro.getText());
         String ssql= sql.buscarLibro();
-        String titulo[] =sql.tituloBuscarlibro();
+        //String titulo[] =sql.tituloBuscarlibro();
         
-        modelo= new ModeloTabla(ssql, titulo, conectar.coneccion());
-        tblLibro.setModel(modelo.getModel());
+        modelo= new ModeloTabla(ssql, conectar.coneccion());
+        tblLibro.setModel(modelo.getModel2());
         
         
          
@@ -710,12 +710,12 @@ public class Biblioteca extends javax.swing.JFrame {
         
         sql= new SecuenciasConsultaSql(txtBuscarSuscriptor.getText());
         String ssql= sql.buscarUsuario();
-        String titulo[] =sql.tituloBuscarUsuario();
+        //String titulo[] =sql.tituloBuscarUsuario();
         
         if(cboSuscriptor.getSelectedIndex()==0){
         
-        modelo= new ModeloTabla(ssql, titulo, conectar.coneccion());
-        tblLibro.setModel(modelo.getModel());
+        modelo= new ModeloTabla(ssql, conectar.coneccion());
+        tblLibro.setModel(modelo.getModel2());
         //DefaultTableModel getModel= new DefaultTableModel(null, titulo);
         }
         else if(cboSuscriptor.getSelectedIndex()==1){

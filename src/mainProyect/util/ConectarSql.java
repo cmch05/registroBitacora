@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mainProyect.sql;
+package mainProyect.util;
 
 import java.awt.HeadlessException;
 import java.net.ConnectException;
@@ -41,5 +41,9 @@ public class ConectarSql {
         }
         return con;
     }
+     public void desconeccion() throws SQLException{
+         con.close();
+     }
+     
     
 }

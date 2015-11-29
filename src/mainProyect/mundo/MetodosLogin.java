@@ -1,5 +1,7 @@
 package mainProyect.mundo;
 
+import mainProyect.util.ConsultaSql;
+import mainProyect.util.ConectarSql;
 import mainProyect.sql.*;
 import mainProyect.interfaces.*;
 import java.awt.event.*;
