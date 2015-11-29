@@ -4,11 +4,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 
-public class formatoFecha {
+public class FormatoFecha {
     private static final String DATE_PATTERN="yyyy.mm.dd";
-    
+
     private static final DateTimeFormatter DATE_FORMATTER=
            DateTimeFormatter.ofPattern(DATE_PATTERN);
+    public FormatoFecha() {
+    }
             
     public static String formato(LocalDate date){
         if(date==null){
@@ -25,7 +27,7 @@ public class formatoFecha {
         }
     }
     public static boolean validarFecha(String dateString){
-        return formatoFecha.parse(dateString) != null;
+        return FormatoFecha.parse(dateString) != null;
     }
     
 }
