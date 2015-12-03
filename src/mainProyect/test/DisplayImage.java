@@ -98,7 +98,7 @@ public class DisplayImage extends javax.swing.JFrame {
     }
     
     public void cargarImagenDb(){
-        String sql="select * from usuario where nombre='asia'";
+        String sql="select * from usuario where nombre='prohibir'";
         try {
             pst = con.coneccion().prepareStatement(sql);
             ResultSet rs= pst.executeQuery();
@@ -129,7 +129,7 @@ public class DisplayImage extends javax.swing.JFrame {
                 lblFoto.setText(null);
                 lblFoto.setIcon(icono);
                 //*******************************************
-                JOptionPane.showMessageDialog(null, "erraaaaaaaaaaaaaaaaaaaaaaaaor:   "+ name);
+                JOptionPane.showMessageDialog(null, "cargada :   "+ name);
             }
             
             
