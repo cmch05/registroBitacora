@@ -1,5 +1,7 @@
 comandos mySQL
 
+-ALTER TABLE tbl AUTO_INCREMENT = 100;//iniciar autoincremental en valor diferente a cero
+
 -regexp //expresion regulada //similar al Pattern de java
 -select substring_index('cristian mauricio',' ',-1);// devuelve el substring que hay a la izquerda del delimitador
 -select datediff(curdate(),'2015-12-01');//cuenta los dias entre las dos fechas

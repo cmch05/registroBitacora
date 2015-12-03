@@ -10,5 +10,15 @@ package mainProyect;
  * @author cmch05
  */
 public class NewClass {
+    private int casa;
+
+    public void setCasa(int casa) {
+        this.casa = casa;
+    }
+
+    public int getCasa() {
+        return casa;
+    }
+    
     
 }

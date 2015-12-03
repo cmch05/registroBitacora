@@ -27,6 +27,7 @@ public class ConsultaSql {
         try{
         pst=con.prepareStatement(sql);
         rs=pst.executeQuery(sql);
+        //con.close();
         }
         catch(SQLException ex){
             JOptionPane.showMessageDialog(null, " error "+ex);
@@ -37,6 +38,7 @@ public class ConsultaSql {
         try{
         pst=con.prepareStatement(sql);
         pst.executeQuery(sql);
+        //con.close();
         }
         catch(SQLException ex){
             JOptionPane.showMessageDialog(null, " error "+ex);
