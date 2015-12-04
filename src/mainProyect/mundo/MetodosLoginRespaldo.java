@@ -2,42 +2,34 @@ package mainProyect.mundo;
 
 import mainProyect.util.ConsultaSql;
 import mainProyect.util.ConectarSql;
+import mainProyect.sql.*;
 import mainProyect.interfaces.*;
 import java.awt.event.*;
 import java.sql.*;
 import javax.swing.*;
 
-public class MetodosLogin {
+public class MetodosLoginRespaldo {
     private JButton btnBiblioteca;
     private JButton btnUsuario;
     private boolean habilitadoBiblioteca= false;
-    private boolean habilitadoUsuario= false;
-//****************reestructura***************************
+    private boolean habilitadoUsuario= true;
+
     public boolean isHabilitadoUsuario() {
         return habilitadoUsuario;
     }
+
     public boolean isHabilitadoBiblioteca() {
         return habilitadoBiblioteca;
     }
-    public int getPerfil() {
-        return perfil;
-    }
-    public String getUsr() {
-        return usr;
-    }
-    //*******************************
+
     private JTextField txtContraseña, txtUsuario;
     private ConsultaSql consulta;
     private Connection con;
     private final ConectarSql conectar = new ConectarSql("root", "", "localhost", "login");
 
     private String pass, usr, sSQL;
-
-    
     private PreparedStatement pst;
     private int perfil;
-
-    
     private static int errores;
     private ResultSet rs;
     //private ConsultaSql consulta =new ConsultaSql(conectar.coneccion(),sSQL);
@@ -51,17 +43,17 @@ public class MetodosLogin {
         this.b = b;
     }
 
-    public MetodosLogin() {
+    public MetodosLoginRespaldo() {
 
     }
 
-    public MetodosLogin(JTextField txtContraseña) {
+    public MetodosLoginRespaldo(JTextField txtContraseña) {
         this.txtContraseña = txtContraseña;
         agregarAccionJTextFiel(txtContraseña);
 
     }
 
-    public MetodosLogin(String pass, String usr) {
+    public MetodosLoginRespaldo(String pass, String usr) {
         this.pass = pass;
         this.usr = usr;
     }
@@ -102,24 +94,17 @@ public class MetodosLogin {
 
         if (respuesta.equals("usuario_aceptado")) {
             if (perfil == 1) {
-                //b = true;
+                b = true;
                 JOptionPane.showMessageDialog(null, "Bienvenido Administrador");
-                this.habilitadoBiblioteca=true;
-                this.habilitadoUsuario=true;
-                
-                //cambioInterfaz(perfil, usr);
+                cambioInterfaz(perfil, usr);
             } else if (perfil == 2) {
-                this.habilitadoBiblioteca=true;
-                this.habilitadoUsuario=false;
-                //b = true;
-                JOptionPane.showMessageDialog(null, "Bienvenido Bibliotecario");
-                //cambioInterfaz(perfil, usr);
+                b = true;
+                JOptionPane.showMessageDialog(null, "Bienvenido Visitante");
+                cambioInterfaz(perfil, usr);
             } else if (perfil == 3) {
-                //b = true;
-                this.habilitadoBiblioteca=true;
-                this.habilitadoUsuario=false;
+                b = true;
                 JOptionPane.showMessageDialog(null, "Bienvenido Editor");
-                //cambioInterfaz(perfil, usr);
+                cambioInterfaz(perfil, usr);
             }
         } else {
             if (errores < 2) {
@@ -153,10 +138,8 @@ public class MetodosLogin {
         // Login login = new Login();
         //b=true;
 
-        sSQL= "call login.cambiointerface('"+usr+"')";
+        sSQL= "login.cambiointerface("+usr+")";
         consulta= new  ConsultaSql(conectar.coneccion(), sSQL);
-        consulta.getConsulta();
-        // JOptionPane.showMessageDialog(null, usr);
 
     }
 

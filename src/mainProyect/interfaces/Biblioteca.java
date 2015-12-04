@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package mainProyect.interfaces;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +18,7 @@ import mainProyect.sql.InsertSql;
 import mainProyect.util.ModeloTabla;
 import mainProyect.sql.SecuenciasConsultaSql;
 import mainProyect.mundo.MetodosBiblioteca;
+import mainProyect.mundo.MetodosComunes;
 
 /**
  *
@@ -29,6 +32,7 @@ public class Biblioteca extends javax.swing.JFrame {
     private ModeloTabla modelo;
     private SecuenciasConsultaSql sql;
     private InsertSql insertar;
+    private boolean suiche;
 
     /**
      * Creates new form Biblioteca
@@ -38,7 +42,33 @@ public class Biblioteca extends javax.swing.JFrame {
         //cboDepartamento.addItem("");
         cargarComboDepartamento();
         cboCidudad.setEnabled(false);
+        antesCerrar();
         
+    }
+    public void antesCerrar() {
+        setDefaultCloseOperation(Usuarios.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                registarSalida();
+            }
+
+        });
+
+        // setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+    }
+    
+    public void registarSalida() {
+        
+        MetodosComunes metodo= new MetodosComunes("biblioteca", 0);
+        metodo.registarSalida();
+        if (suiche == true) {
+            this.dispose();
+            Login login = new Login();
+            login.setVisible(suiche);
+        } else {
+
+            System.exit(0);
+        }
     }
 
   
@@ -554,6 +584,11 @@ public class Biblioteca extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblLibro);
 
         txtCerrar.setText("Cerrar Sesion");
+        txtCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCerrarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -584,9 +619,14 @@ public class Biblioteca extends javax.swing.JFrame {
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
+        jMenu2.setText("Ayuda");
 
-        jMenuItem1.setText("jMenuItem1");
+        jMenuItem1.setText("Ayuda");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem1);
 
         jMenuBar1.add(jMenu2);
@@ -663,14 +703,28 @@ public class Biblioteca extends javax.swing.JFrame {
         paginas= txtPaginasLibro.getText();
         anno_edicion= txtAñoLibro.getText();
         precio= txtPrecio.getText();
+        if (paginas.equals("")) {
+            JOptionPane.showMessageDialog(null, "Ingrese el numero de paginas");
+        }
+        else{
+            if (anno_edicion.equals("")) {
+                JOptionPane.showMessageDialog(null, "Ingrese el año de edicion");
+            }
+            else{
+                if (precio.equals("")) {
+                    JOptionPane.showMessageDialog(null, "Ingrese el Precio");
+                }
+                else{
+                    String sSql= "call biblioteca.nuevolibro('"+nombre+"',"
+                        + " '"+editorial+"', '"+autor+"','"+genero+"', "
+                        + "'"+paisAutor+"', '"+paginas+"', '"+anno_edicion+"', '"+precio+"')";
+                    consulta= new ConsultaSql(conectar.coneccion(), sSql);
+                    consulta.getConsulta();
+                    
+                }
+            }
+        }
         
-        String sSql= "call biblioteca.nuevolibro('"+nombre+"',"
-                + " '"+editorial+"', '"+autor+"','"+genero+"', "
-                + "'"+paisAutor+"', '"+paginas+"', '"+anno_edicion+"', '"+precio+"')";
-        
-        
-        consulta= new ConsultaSql(conectar.coneccion(), sSql);
-        consulta.getConsulta();
         
         
         
@@ -731,6 +785,17 @@ public class Biblioteca extends javax.swing.JFrame {
         cargarComboCiudad();
         
     }//GEN-LAST:event_cboDepartamentoActionPerformed
+
+    private void txtCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCerrarActionPerformed
+        // TODO add your handling code here:
+        suiche= true;
+        registarSalida();
+    }//GEN-LAST:event_txtCerrarActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(null, "I can't help you in this moment");
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     
     /**

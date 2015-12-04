@@ -5,6 +5,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import mainProyect.mundo.MetodosBiblioteca;
+import mainProyect.mundo.MetodosComunes;
 import mainProyect.mundo.MetodosLogin;
 
 /**
@@ -12,8 +14,12 @@ import mainProyect.mundo.MetodosLogin;
  * @author cmch05
  */
 public class Login extends javax.swing.JFrame {
-    /*
     private int perfil;
+    private String usuario;
+    
+    //private boolean visibilidad=false;
+    /*
+    
     private String sSQL;
     private PreparedStatement pst;
     private int errores=0;
@@ -26,9 +32,41 @@ public class Login extends javax.swing.JFrame {
         agregarAccionJTextFiel(txtContraseña);
         this.setResizable(false);
         this.setLocation(580,250);
+        
+        MetodosLogin metodo= new MetodosLogin();
+        btnHabilitado(metodo.isHabilitadoBiblioteca(),metodo.isHabilitadoUsuario());
     }
-   // ConectarDB conectar =new ConectarDB();
-    
+   
+    public void btnHabilitado(boolean biblioteca, boolean usuario){
+        btnBiblioteca.setEnabled(biblioteca);
+        btnUsuario.setEnabled(usuario);
+        
+    }
+    public void llamada(){
+        
+        String pass= txtContraseña.getText();
+        String usr = txtUsuario.getText();
+        MetodosLogin metodo=new MetodosLogin( pass, usr);
+        metodo.registroEntrada();
+        
+        btnHabilitado(metodo.isHabilitadoBiblioteca(), metodo.isHabilitadoUsuario());
+        //btnBiblioteca.setEnabled(metodo.isHabilitadoBiblioteca());
+        //btnUsuario.setEnabled(metodo.isHabilitadoUsuario());
+        perfil= metodo.getPerfil();
+        
+        usuario=metodo.getUsr();
+        
+       // this.dispose();
+        
+       // Menu01 menu01=new Menu01();
+       //********* *** *********************
+       /*
+        if(metodo.isB()){
+            //System.exit(0);
+            this.dispose();
+        }
+        */
+    }
     
 
     @SuppressWarnings("unchecked")
@@ -41,6 +79,10 @@ public class Login extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtContraseña = new javax.swing.JPasswordField();
+        btnBiblioteca = new javax.swing.JButton();
+        btnUsuario = new javax.swing.JButton();
+        lblUsuario = new javax.swing.JLabel();
+        lblBiblioteca = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("BD Acces");
@@ -48,7 +90,7 @@ public class Login extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Acceso a los Usuarios"));
 
-        jButton1.setText("Entrar");
+        jButton1.setText("Verificar");
         jButton1.setBorder(null);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -60,6 +102,24 @@ public class Login extends javax.swing.JFrame {
 
         jLabel2.setText("Contraseña");
 
+        btnBiblioteca.setText("Entrar");
+        btnBiblioteca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBibliotecaActionPerformed(evt);
+            }
+        });
+
+        btnUsuario.setText("Entrar");
+        btnUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUsuarioActionPerformed(evt);
+            }
+        });
+
+        lblUsuario.setText("Administrar usuarios");
+
+        lblBiblioteca.setText("Biblioteca");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -67,16 +127,27 @@ public class Login extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(129, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(23, 23, 23))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblBiblioteca)
+                            .addComponent(jLabel1)
+                            .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(btnBiblioteca, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnUsuario)
+                            .addComponent(lblUsuario))
+                        .addContainerGap(14, Short.MAX_VALUE))))
         );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnBiblioteca, btnUsuario});
+
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -86,11 +157,19 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
-                .addGap(6, 6, 6)
-                .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(3, 3, 3)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(48, 48, 48)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblBiblioteca, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblUsuario))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBiblioteca)
+                    .addComponent(btnUsuario))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -112,7 +191,34 @@ public class Login extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
        llamada();
+       //MetodosLogin metodo=new MetodosLogin();
+        //metodo.cambioInterfaz(perfil, usr);
+       
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnBibliotecaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBibliotecaActionPerformed
+        //MetodosLogin metodo=new MetodosLogin();
+        //metodo.cambioInterfaz(perfil, usr);
+        //MetodosBiblioteca metodo = new MetodosBiblioteca();
+        //metodo.cambioInterfaz();
+        MetodosComunes metodo= new MetodosComunes("biblioteca", usuario, perfil);
+        metodo.cambioInterfaz();
+        this.dispose();
+        
+        
+    }//GEN-LAST:event_btnBibliotecaActionPerformed
+
+    private void btnUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuarioActionPerformed
+       
+        //MetodosLogin metodo=new MetodosLogin();
+        //metodo.cambioInterfaz(perfil, usuario);
+        //MetodosComunes metodo= new MetodosComunes("usuario");
+        MetodosComunes metodo= new MetodosComunes("usuario", usuario, perfil);
+        metodo.cambioInterfaz();
+        this.dispose();
+        this.dispose();
+        
+    }//GEN-LAST:event_btnUsuarioActionPerformed
     public void agregarAccionJTextFiel(JTextField m){
         m.addKeyListener(new KeyAdapter(){
             @Override
@@ -126,24 +232,7 @@ public class Login extends javax.swing.JFrame {
         });
     }
     //boolean b=false;
-    public void llamada(){
-        
-        String pass= txtContraseña.getText();
-        String usr = txtUsuario.getText();
-        MetodosLogin metodo=new MetodosLogin( pass, usr);
-       
-        metodo.registroEntrada();
-        
-        
-       // this.dispose();
-        
-       // Menu01 menu01=new Menu01();
-        if(metodo.isB()){
-            //System.exit(0);
-            this.dispose();
-        }
-        
-    }
+    
     /**
      * @param args the command line arguments
      */
@@ -178,10 +267,14 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBiblioteca;
+    private javax.swing.JButton btnUsuario;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblBiblioteca;
+    private javax.swing.JLabel lblUsuario;
     private javax.swing.JPasswordField txtContraseña;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables

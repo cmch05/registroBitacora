@@ -41,8 +41,17 @@ public class ConsultaSql {
         //con.close();
         }
         catch(SQLException ex){
-            JOptionPane.showMessageDialog(null, " error "+ex);
+            //borrar este JOptionPane depsues de verificar todo
+            JOptionPane.showMessageDialog(null, "Nº error "+ex.getErrorCode()+" error "+ex);
+                                    //ex.getErrorCode()); codigo para tomar el numero de error
+            if (ex.getErrorCode()==1265) {
+                JOptionPane.showMessageDialog(null, "Verifique los valores numericos ingresados, antes de enviar");
+            }
+            if (ex.getErrorCode()==0) {
+                JOptionPane.showMessageDialog(null, "Verifique que el Formato de fecha sea YYYY-MM-DD antes de enviar");
+            }
         }
+        
     }
     
 }

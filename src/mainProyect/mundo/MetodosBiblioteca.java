@@ -5,10 +5,27 @@
  */
 package mainProyect.mundo;
 
+import mainProyect.interfaces.Biblioteca;
+import mainProyect.interfaces.Usuarios;
+import mainProyect.util.ConsultaSql;
+
 /**
  *
  * @author cmch05
  */
 public class MetodosBiblioteca {
+    private String sql;
+    
+    //public void cambioInterfaz(int per, String usr) {
+    public void cambioInterfaz() {
+        Biblioteca biblioteca = new Biblioteca();
+        biblioteca.setVisible(true);
+        // Login login = new Login();
+        //b=true;
+
+        //sql= "login.cambiointerface("+usr+")";
+        //consulta= new  ConsultaSql(conectar.coneccion(), sSQL);
+
+    }
     
 }

@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import mainProyect.mundo.ConectarDB;
 import javax.swing.JMenuItem;
 import javax.swing.JTextField;
+import mainProyect.mundo.MetodosComunes;
 import mainProyect.mundo.MetodosUsuarios;
 import org.apache.commons.codec.digest.DigestUtils;// modulo common
 
@@ -95,8 +96,9 @@ public class Usuarios extends javax.swing.JFrame {
 
         // setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     }
-
+    
     public void registarSalida() {
+        /*
         ConectarDB conectar = new ConectarDB();
         con = conectar.coneccion();
         int ser = 0;
@@ -113,6 +115,9 @@ public class Usuarios extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "error " + ex);
         }
         //this.dispose();
+        */
+        MetodosComunes metodo= new MetodosComunes("usuario", perfil);
+        metodo.registarSalida();
         if (suiche == true) {
             this.dispose();
             Login login = new Login();
@@ -487,6 +492,7 @@ public class Usuarios extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Administracion de Usuarios");
 
         tblUsuario.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -635,14 +641,15 @@ public class Usuarios extends javax.swing.JFrame {
             .addGroup(pnMainLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnMainLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnSalida))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnMainLayout.createSequentialGroup()
-                        .addComponent(pn1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(pn2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnSalida, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnMainLayout.createSequentialGroup()
+                                .addComponent(pn1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(pn2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         pnMainLayout.setVerticalGroup(

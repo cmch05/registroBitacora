@@ -52,4 +52,15 @@ create procedure login(in _usr varchar(50), in _pass varchar(50))
                 values(_usr,curdate(),curtime());
     
     end; //
+    -- ----------------------------------------------------------
+    delimiter //
+    drop procedure if exists salidalogin; //
+    create procedure salidalogin()
+    begin
+    
+    update bitacora set fecha_salida = curdate() , hora_salida = curtime() order by serial desc limit 1 ;
+    
+    end; //
+   -- update bitacora set fecha_salida = curdate() , hora_salida = curtime() order by serial desc limit 1 
+    
 

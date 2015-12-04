@@ -69,6 +69,26 @@ create procedure selectciudad(in parametro varchar(50))
         join departamento  as d on d.codigo= c.departamento where d.nombre=parametro;
 	end; //
     
+    -- ------------------------------------------------------------------------------
+     delimiter //
+    drop procedure if exists salidabiblioteca; //
+    create procedure salidabiblioteca()
+    begin
+    
+    update bitacora set fecha_salida = now()order by serial desc limit 1 ;
+    
+    end; //
+    -- ---------------------------------------
+     delimiter //
+    drop procedure if exists registroentrada; //
+    create procedure registroentrada(in _usr varchar(20))
+    begin
+    
+    insert into bitacora(login,fecha_ingreso)
+                values(_usr,now());
+    
+    end; //
+    
 
 
 --  select c.nombre as nom_cidudad from ciudad as c  join departamento  as d on d.codigo= c.departamento where d.nombre='valle';

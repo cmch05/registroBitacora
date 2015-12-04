@@ -17,7 +17,7 @@ import javax.swing.plaf.ComboBoxUI;
 import javax.swing.table.DefaultTableModel;
 import mainProyect.util.ConectarSql;
 //import mainProyect.mundo.ConectarSql;
-import mainProyect.mundo.Metodos;
+import mainProyect.mundo.MetodosComunes;
 import mainProyect.mundo.MetodosUsuarios;
 /*
 import net.sf.jasperreports.engine.JRException;
@@ -57,9 +57,9 @@ public class MultiMenu extends javax.swing.JFrame {
          
          DefaultTableModel model= (DefaultTableModel)tblUsuario.getModel();
          
-         Metodos metodos=new Metodos(model, tblUsuario, fila,columna);
+        // MetodosComunes metodos=new MetodosComunes(model, tblUsuario, fila,columna);
          
-         metodos.enterTabla();
+         //metodos.enterTabla();
          
          /*
          model.addTableModelListener(new TableModelListener(){

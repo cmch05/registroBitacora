@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 24, 2015 at 03:04 AM
+-- Generation Time: Dec 04, 2015 at 04:11 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -20,6 +20,69 @@ SET time_zone = "+00:00";
 -- Database: `login`
 --
 
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cambiointerface`(in _usr varchar(20))
+begin
+    
+    insert into bitacora(login,fecha_ingreso,hora_ingreso)
+                values(_usr,curdate(),curtime());
+    
+    end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `login`(in _usr varchar(50), in _pass varchar(50))
+begin
+		
+        set @_login ='onomatopeya';
+        set @_password ='onomatopeya';
+        set @_estado ='';
+        set @_fecha ='';
+        set @_nivel ='';
+        set @_respuesta='';
+        
+        select login  into
+				@_login
+				from usuario where login = _usr; -- fecha >= curdate() and 
+				-- concat('md5(',_pass,')') ; -- and estado = true;
+		
+        select pass ,estado ,fecha,nivel  into
+				@_password,@_estado,@_fecha,@_nivel
+				from usuario where -- fecha >= curdate() and 
+				pass= md5(_pass) and login = _usr;-- concat('md5(',_pass,')') ; -- and estado = true;
+        
+        if @_login ='onomatopeya' then
+			set @_respuesta='usuario_incorrecto';
+		else
+			if @_password ='onomatopeya' then
+				set @_respuesta='contrasaña_incorrecta';
+			else
+				if @_estado=false then
+					set @_respuesta='sin_permiso';
+					else
+						if curdate()>@_fecha then
+							set @_respuesta='Fecha_caduca';
+						else
+                        set @_respuesta='usuario_aceptado';
+						end if;
+				end if;
+			end if;
+		end if;
+        
+        select @_respuesta, @_nivel;
+        
+	end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `salidalogin`()
+begin
+    
+    update bitacora set fecha_salida = curdate() , hora_salida = curtime() order by serial desc limit 1 ;
+    
+    end$$
+
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -35,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `bitacora` (
   `hora_salida` time DEFAULT NULL,
   `nivel` int(2) DEFAULT NULL,
   PRIMARY KEY (`serial`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=281 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=297 ;
 
 --
 -- Dumping data for table `bitacora`
@@ -321,7 +384,23 @@ INSERT INTO `bitacora` (`serial`, `login`, `fecha_ingreso`, `fecha_salida`, `hor
 (277, '', '2015-11-20', '2015-11-20', '14:32:21', '14:43:56', NULL),
 (278, '', '2015-11-20', '2015-11-20', '14:44:02', '14:55:01', NULL),
 (279, '', '2015-11-20', '2015-11-20', '15:03:07', '15:07:46', NULL),
-(280, '', '2015-11-20', '2015-11-20', '15:13:10', '15:25:08', NULL);
+(280, '', '2015-11-20', '2015-11-20', '15:13:10', '15:25:08', NULL),
+(281, '', '2015-11-24', '2015-11-24', '22:26:08', '22:26:34', NULL),
+(282, '', '2015-11-24', '2015-11-24', '22:26:43', '22:27:13', NULL),
+(283, '', '2015-11-24', '2015-11-24', '22:55:05', '22:55:22', NULL),
+(284, '', '2015-11-25', '2015-11-25', '00:32:32', '00:32:34', NULL),
+(285, '', '2015-11-25', '2015-11-25', '00:40:26', '00:40:28', NULL),
+(286, 'quinto', '2015-11-25', '2015-11-25', '00:51:06', '00:51:19', NULL),
+(287, 'cmch05', '2015-11-25', NULL, '19:59:07', NULL, NULL),
+(288, 'cmch05', '2015-11-25', NULL, '19:59:12', NULL, NULL),
+(289, 'cmch05', '2015-11-25', '2015-12-03', '20:00:44', '19:25:39', NULL),
+(290, '', '2015-12-03', NULL, '19:26:48', NULL, NULL),
+(291, '', '2015-12-03', NULL, '19:44:19', NULL, NULL),
+(292, 'cmch05', '2015-12-03', NULL, '19:45:43', NULL, NULL),
+(293, 'cmch05', '2015-12-03', '2015-12-03', '19:46:59', '19:47:03', NULL),
+(294, '', '2015-12-03', '2015-12-03', '19:48:11', '19:48:19', NULL),
+(295, '', '2015-12-03', '2015-12-03', '19:48:29', '19:48:38', NULL),
+(296, '', '2015-12-03', '2015-12-03', '20:37:39', '20:49:47', NULL);
 
 -- --------------------------------------------------------
 
@@ -335,7 +414,7 @@ CREATE TABLE IF NOT EXISTS `historial` (
   `cambio` varchar(200) DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
   PRIMARY KEY (`serie`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `historial`
@@ -347,7 +426,11 @@ INSERT INTO `historial` (`serie`, `usuario`, `cambio`, `fecha`) VALUES
 (3, 'moder2121', 'actualizacion en: nombre moder2121  contraseña: 827ccb0eea8a706c4c34a16891f84e7b  estado: 0  fecha: 2010-10-10 nivel: 2', '2015-11-20 15:21:28'),
 (4, 'moder2', 'actualizacion en: nombre moder21  contraseña: 827ccb0eea8a706c4c34a16891f84e7b  estado: 0  fecha: 2010-10-10 nivel: 2', '2015-11-20 15:24:37'),
 (5, 'last', 'usuario eliminado: last', '2015-11-20 16:20:01'),
-(6, 'last1', 'usuario eliminado: last1', '2015-11-20 16:22:12');
+(6, 'last1', 'usuario eliminado: last1', '2015-11-20 16:22:12'),
+(7, 'sexto', 'actualizacion en: nombre sexto  contraseña: 827ccb0eea8a706c4c34a16891f84e7b  estado: 1  fecha: 2013-12-02 nivel: 2', '2015-11-25 00:20:39'),
+(8, 'quinto', 'actualizacion en: nombre quintox  contraseña: 827ccb0eea8a706c4c34a16891f84e7b  estado: 1  fecha: 2015-12-31 nivel: 2', '2015-12-03 16:59:22'),
+(9, 'quintox', 'actualizacion en: nombre quintox  contraseña: 827ccb0eea8a706c4c34a16891f84e7b  estado: 1  fecha: 2015-12-31 nivel: 2', '2015-12-03 16:59:35'),
+(10, 'moder2121', 'actualizacion en: nombre quintoz  contraseña: 827ccb0eea8a706c4c34a16891f84e7b  estado: 0  fecha: 2010-10-10 nivel: 2', '2015-12-03 16:59:44');
 
 -- --------------------------------------------------------
 
@@ -444,7 +527,7 @@ INSERT INTO `prueba` (`nombre`, `telefono`) VALUES
 
 CREATE TABLE IF NOT EXISTS `usuario` (
   `login` varchar(20) NOT NULL DEFAULT '',
-  `password` varchar(100) NOT NULL,
+  `pass` varchar(100) DEFAULT NULL,
   `estado` tinyint(1) DEFAULT NULL,
   `fecha` date DEFAULT NULL,
   `nivel` int(2) DEFAULT NULL,
@@ -456,14 +539,14 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 -- Dumping data for table `usuario`
 --
 
-INSERT INTO `usuario` (`login`, `password`, `estado`, `fecha`, `nivel`) VALUES
+INSERT INTO `usuario` (`login`, `pass`, `estado`, `fecha`, `nivel`) VALUES
 ('', '827ccb0eea8a706c4c34a16891f84e7b', 1, '2015-12-31', 1),
 ('cmch05', '827ccb0eea8a706c4c34a16891f84e7b', 1, '2015-12-11', 1),
 ('maximilian', '827ccb0eea8a706c4c34a16891f84e7b', 0, '2011-11-11', 3),
 ('moder21', '827ccb0eea8a706c4c34a16891f84e7b', 0, '2010-10-10', 2),
-('moder2121', '827ccb0eea8a706c4c34a16891f84e7b', 0, '2010-10-10', 2),
-('quinto', '827ccb0eea8a706c4c34a16891f84e7b', 1, '2015-12-31', 2),
-('sexto', '827ccb0eea8a706c4c34a16891f84e7b', 0, '2013-12-02', 2),
+('quintox', '827ccb0eea8a706c4c34a16891f84e7b', 1, '2015-12-31', 2),
+('quintoz', '827ccb0eea8a706c4c34a16891f84e7b', 0, '2010-10-10', 2),
+('sexto', '827ccb0eea8a706c4c34a16891f84e7b', 1, '2013-12-02', 2),
 ('usuario1', '827ccb0eea8a706c4c34a16891f84e7b', 1, '2016-02-05', 3),
 ('usuario2', '827ccb0eea8a706c4c34a16891f84e7b', 1, '2016-02-02', 3),
 ('usuario3s', '62661721940b9ff41bb6eae91c2c39dd', 1, '2017-12-30', 2),
@@ -514,7 +597,7 @@ CREATE TRIGGER `update_usuario` AFTER UPDATE ON `usuario`
  FOR EACH ROW begin
 		insert into historial(usuario,cambio,fecha) values(old.login, concat(
         'actualizacion en: nombre ', new.login,'  contraseña: ',
-        new.password,'  estado: ',new.estado,
+        new.pass,'  estado: ',new.estado,
         '  fecha: ',new.fecha,' nivel: ' , new.nivel ),now());
     
     end
