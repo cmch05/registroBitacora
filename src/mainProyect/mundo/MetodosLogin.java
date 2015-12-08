@@ -117,7 +117,7 @@ public class MetodosLogin {
             } else if (perfil == 3) {
                 //b = true;
                 this.habilitadoBiblioteca=true;
-                this.habilitadoUsuario=false;
+                this.habilitadoUsuario=true;
                 JOptionPane.showMessageDialog(null, "Bienvenido Editor");
                 //cambioInterfaz(perfil, usr);
             }
