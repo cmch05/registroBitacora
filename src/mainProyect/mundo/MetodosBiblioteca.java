@@ -6,8 +6,6 @@
 package mainProyect.mundo;
 
 import mainProyect.interfaces.Biblioteca;
-import mainProyect.interfaces.Usuarios;
-import mainProyect.util.ConsultaSql;
 
 /**
  *

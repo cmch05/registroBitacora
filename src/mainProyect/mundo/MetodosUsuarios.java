@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
+import mainProyect.util.ModeloTabla;
 
 /**
  *
@@ -129,14 +130,15 @@ public class MetodosUsuarios {
 
     public void verBitacora() {
         // un array un modelo una tabla un string
-        String titulo[] = {"Login", "Fecha ingreso", "Hora Ingreso", "Fecha salida", "Hora salida"};
-        String[] registro = new String[5];
-        modelo = new DefaultTableModel(null, titulo);
+        //String titulo[] = {"Login", "Fecha ingreso", "Hora Ingreso", "Fecha salida", "Hora salida"};
+       // String[] registro = new String[5];
+        //modelo = new DefaultTableModel(null, titulo);
         sSQL = "select serial, login, fecha_ingreso,hora_ingreso,fecha_salida, hora_salida from bitacora"
                 + " where concat(login,' ', fecha_ingreso,' ',fecha_salida,' ',hora_ingreso,' ', hora_salida)"
                 + " like '%" + parametroBusqueda + "%'";
         conectar = new ConectarDB();
         con = conectar.coneccion();
+        /*
         try {
             pst = con.prepareStatement(sSQL);
             rs = pst.executeQuery(sSQL);
@@ -156,6 +158,9 @@ public class MetodosUsuarios {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "error " + ex);
         }
+        */
+        ModeloTabla modeloT = new ModeloTabla(sSQL, con);
+        tblUsuario.setModel(modeloT.getModelTituloTabla());
     }
 
     

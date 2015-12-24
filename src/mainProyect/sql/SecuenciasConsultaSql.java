@@ -10,6 +10,12 @@ public class SecuenciasConsultaSql {
         this.parametro = parametro;
     }
     
+    private  String editorial,
+                    autor,
+                    genero,
+                    paisAutor,
+                    paginas,anno_edicion,
+                    precio;
     private String sql;
     private String[]titulo;
     private String  nombre,
@@ -29,6 +35,17 @@ public class SecuenciasConsultaSql {
         this.nacimiento = nacimiento;
         this.ciudad = ciudad;
         this.departamento = departamento;
+    }
+    public SecuenciasConsultaSql(String editorial, String autor, String genero, 
+            String paisAutor, String paginas, String anno_edicion, String precio, String nombre) {
+        this.editorial = editorial;
+        this.autor = autor;
+        this.genero = genero;
+        this.paisAutor = paisAutor;
+        this.paginas = paginas;
+        this.anno_edicion = anno_edicion;
+        this.precio = precio;
+        this.nombre = nombre;
     }
     //----------------------------------------------------------
     public String buscarUsuario(){
@@ -53,7 +70,13 @@ public class SecuenciasConsultaSql {
     }
     public String nuevoLibro(){
         
+         sql= "call biblioteca.nuevolibro('"+nombre+"',"
+                        + " '"+editorial+"', '"+autor+"','"+genero+"', "
+                        + "'"+paisAutor+"', '"+paginas+"',"
+                        + " '"+anno_edicion+"', '"+precio+"')";
+        
         // pendiente de organizacion del procedimineto
+        /*
         sql="call biblioteca.nuevolibro"
                 + "('progamacion con java', 'Thomson Learning', 'Rick Decker ,"
                 + " Stuar Hirshfield', 'Educacion', 'USA', 618, '2001', 2900)";
@@ -61,9 +84,11 @@ public class SecuenciasConsultaSql {
         
         sql="insert into libro(nombre, editorial, autor, genero, pais_autor,"
             + "paginas, anno_edicion, precio) values(?,?,?,?,?,?,?,?)";
-        
+        */
         return sql;
     }
+
+    
     
     public String nuevoUsuario(){
         
