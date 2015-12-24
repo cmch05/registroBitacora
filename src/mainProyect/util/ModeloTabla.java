@@ -23,16 +23,15 @@ public class ModeloTabla {
     private String titulo[];
     private Connection con;
 
-    public ModeloTabla() {
-    }
-
+    public ModeloTabla() {}
+    // contructor con titulo
     public ModeloTabla(String sql, String[] titulo, Connection coneccion) {
         //this.largo = largo;
         this.sql = sql;
         this.titulo = titulo;
         this.con = coneccion;
     }
-
+    // contructor sin titulo
     public ModeloTabla(String sql, Connection coneccion) {
         //this.largo = largo;
         this.sql = sql;
@@ -58,7 +57,7 @@ public class ModeloTabla {
         return modelo;
     }
 
-    public DefaultTableModel getModel2() {
+    public DefaultTableModel getModelTituloTabla() {
         try {
 
             PreparedStatement pst = con.prepareStatement(sql);
@@ -71,7 +70,7 @@ public class ModeloTabla {
             String[] titulo2 = new String[largo];
 
             for (int i = 0; i < largo; i++) {
-                titulo2[i] = rsmd.getColumnLabel(i + 1);
+                titulo2[i] = rsmd.getColumnLabel(i + 1);//llena el array con los titulos de las columnas de la tabla
             }
             modelo = new DefaultTableModel(null, titulo2);
             while (rs.next()) {

@@ -19,6 +19,7 @@ public class NewClass {
     public int getCasa() {
         return casa;
     }
-    
+   
+
     
 }

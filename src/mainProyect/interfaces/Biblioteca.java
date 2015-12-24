@@ -6,7 +6,6 @@
 package mainProyect.interfaces;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -683,7 +682,7 @@ public class Biblioteca extends javax.swing.JFrame {
         //String titulo[] =sql.tituloBuscarlibro();
         
         modelo= new ModeloTabla(ssql, conectar.coneccion());
-        tblLibro.setModel(modelo.getModel2());
+        tblLibro.setModel(modelo.getModelTituloTabla());
         
         
          
@@ -715,9 +714,10 @@ public class Biblioteca extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Ingrese el Precio");
                 }
                 else{
-                    String sSql= "call biblioteca.nuevolibro('"+nombre+"',"
-                        + " '"+editorial+"', '"+autor+"','"+genero+"', "
-                        + "'"+paisAutor+"', '"+paginas+"', '"+anno_edicion+"', '"+precio+"')";
+                    sql = new SecuenciasConsultaSql(editorial, autor, genero, paisAutor,
+                            paginas, anno_edicion, precio, nombre);
+                    String sSql= sql.nuevoUsuario();
+                    
                     consulta= new ConsultaSql(conectar.coneccion(), sSql);
                     consulta.getConsulta();
                     
@@ -769,7 +769,7 @@ public class Biblioteca extends javax.swing.JFrame {
         if(cboSuscriptor.getSelectedIndex()==0){
         
         modelo= new ModeloTabla(ssql, conectar.coneccion());
-        tblLibro.setModel(modelo.getModel2());
+        tblLibro.setModel(modelo.getModelTituloTabla());
         //DefaultTableModel getModel= new DefaultTableModel(null, titulo);
         }
         else if(cboSuscriptor.getSelectedIndex()==1){
