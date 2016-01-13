@@ -15,7 +15,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.plaf.ComboBoxUI;
 import javax.swing.table.DefaultTableModel;
-import mainProyect.util.ConectarSql;
+//import mainProyect.util.ConectadoDB;
 //import mainProyect.mundo.ConectarSql;
 import mainProyect.mundo.MetodosComunes;
 import mainProyect.mundo.MetodosUsuarios;

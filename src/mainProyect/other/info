@@ -63,5 +63,6 @@ comandos mySQL
 -create table nombre_tabla(unaColumna varchar(20) unsigned);// el atributo "unsigned" permite solo valores positivos ademas en los integer duplica la capacidad ya que no toma valores negativos, pero en los float no pasa eso, muy util para precios.
 -select * from tabla where year(fecha)=2005 and month(fecha)=12;buscar en fecha
 	por mes o por año solamente
+-select * from nombre_tabla order by nombre_columna desc limit 5;
 
 

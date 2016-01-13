@@ -1,7 +1,6 @@
 package mainProyect.mundo;
 
 import mainProyect.util.ConsultaSql;
-import mainProyect.util.ConectarSql;
 import mainProyect.interfaces.*;
 import java.awt.event.*;
 import java.sql.*;
@@ -29,7 +28,7 @@ public class MetodosLogin {
     private JTextField txtContraseña, txtUsuario;
     private ConsultaSql consulta;
     private Connection con;
-    private final ConectarSql conectar = new ConectarSql("root", "", "localhost", "login");
+    private final ConectadoDB conectar = new ConectadoDB();
 
     private String pass, usr, sSQL;
 
@@ -87,7 +86,7 @@ public class MetodosLogin {
         sSQL = "call login.login('" + usr + "', '" + pass + "')";
 
         try {
-            consulta = new ConsultaSql(conectar.coneccion(), sSQL);
+            consulta = new ConsultaSql(conectar.login(), sSQL);
             rs = consulta.getResultSet();
 
             while (rs.next()) {
@@ -154,7 +153,7 @@ public class MetodosLogin {
         //b=true;
 
         sSQL= "call login.cambiointerface('"+usr+"')";
-        consulta= new  ConsultaSql(conectar.coneccion(), sSQL);
+        consulta= new  ConsultaSql(conectar.login(), sSQL);
         consulta.getConsulta();
         // JOptionPane.showMessageDialog(null, usr);
 

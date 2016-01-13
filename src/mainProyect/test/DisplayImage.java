@@ -28,7 +28,7 @@ import mainProyect.util.ConectarSql;
  */
 public class DisplayImage extends javax.swing.JFrame {
     
-    ConectarSql con = new ConectarSql("root", "", "localhost", "imagenes");
+    ConectarSql con= new ConectarSql("root", "", "localhost", "imagenes");
     
      File fiechero;
      FileInputStream fis=null;
